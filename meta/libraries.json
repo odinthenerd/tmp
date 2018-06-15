@@ -1,0 +1,14 @@
+{
+    "key": "mixin",
+    "name": "Mixin",
+    "authors": [
+        "Odin Holmes"
+    ],
+    "maintainers": [
+        "Odin Holmes <odinthenerd -at- gmail.com>"
+    ],
+    "description": "A C++11 library for generic compositional component design.",
+    "category": [
+        "Metaprogramming"
+    ]
+}
