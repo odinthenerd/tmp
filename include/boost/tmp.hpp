@@ -20,6 +20,7 @@
 #include "tmp/sequence/each.hpp"
 #include "tmp/sequence/fork.hpp"
 #include "tmp/pack.hpp"
+#include "tmp/try.hpp"
 #include "tmp/vocabulary.hpp"
 #include "tmp/algorithm/count_if.hpp"
 #include "tmp/algorithm/filter.hpp"

@@ -14,16 +14,22 @@
 namespace boost{
     namespace tmp{
         namespace fusion{
+            template<typename...Ps, typename T, typename C>
+            auto operator>>=(fast_pack<Ps...>&& p, expr<T,C>&& ex){
+                auto tree = ex.reverse();
+                using type = typename decltype(tree)::template exec<typename Ps::type...>;
+                return tree.f(type{},static_cast<Ps&>(p).data...);
+            };
             //will SFINAE if there is no rebind specialization
             template<typename...Ps, typename F,
                     typename RF = typename rebind<F>::type>
-            auto operator||(fast_pack<Ps...>&&p, F f){
-                using ops = call_<RF,call_<fork_<unpack_<at1_<>>,identity_,lift_<operation>>,Ps>...>;
-                return execute(ops{},p,f);
+            auto operator>>=(fast_pack<Ps...>&&p, F f){
+                using type = typename RF::template exec<typename Ps::type...>;
+                return RF{}.f(type{},static_cast<Ps&>(p).data...);
             };
             //will SFINAE if rhs can not be called with pack parameters
             template<typename...Ps, typename F>
-            auto operator||(fast_pack<Ps...>&&p, F f)->decltype(f(static_cast<Ps&>(p).data...)){
+            auto operator>>=(fast_pack<Ps...>&&p, F f)->decltype(f(static_cast<Ps&>(p).data...)){
                 return f(static_cast<Ps&>(p).data...);
             };
         }

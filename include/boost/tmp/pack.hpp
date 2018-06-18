@@ -40,6 +40,7 @@ namespace boost{
                 template<typename I, typename T>
                 struct indexed_base{
                     T data;
+                    using type = T;
                 };
 
                 template<typename...Bs, typename P>

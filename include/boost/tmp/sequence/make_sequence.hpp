@@ -14,7 +14,7 @@
 
 namespace boost{
     namespace tmp{
-    	template<typename F, typename C = listify_>
+    	template<typename F = identity_, typename C = listify_>
     	struct make_sequence_{};
 		namespace detail{
 			template<typename T>
@@ -22,7 +22,7 @@ namespace boost{
 
 			template<std::size_t...Is>
 			struct sequence_impl<std::index_sequence<Is...>>{
-				template<typename C, typename F>
+				template<typename F,typename C>
 				using f = typename dispatch<find_dispatch(sizeof...(Is)),C>::template f<typename dispatch<1,F>::template f<uint_<Is>>...>;
 			};
 			template<typename F, typename C>

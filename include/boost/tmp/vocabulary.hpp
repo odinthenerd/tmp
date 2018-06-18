@@ -18,8 +18,10 @@ namespace boost{
 
         using listify_ = lift_<list_>;
 
-        template<unsigned long long>
-        struct uint_{};
+        template<unsigned long long V>
+        struct uint_{
+            static constexpr unsigned long long value = V;
+        };
         template<long long>
         struct int_{};
         template<bool B>
