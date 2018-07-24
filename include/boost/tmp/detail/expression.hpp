@@ -10,6 +10,7 @@
 
 #include <type_traits>
 #include "../always.hpp"
+#include "../pack.hpp"
 
 namespace boost {
 	namespace tmp {
@@ -57,8 +58,8 @@ namespace boost {
 					using exec = int;
 					T fun;
 					template <typename X, typename... Ts>
-					constexpr auto f(X, Ts &&... as) {
-						return fun(std::forward<Ts>(as)...);
+					constexpr auto f(X, pack<Ts...> &&p) {
+						return fun(static_cast<Ts &>(p).data...);
 					};
 				};
 

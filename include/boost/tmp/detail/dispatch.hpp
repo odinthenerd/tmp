@@ -23,6 +23,12 @@ namespace boost {
 
 			template <unsigned N, typename T>
 			struct dispatch;
+
+			template <typename C>
+			struct dispatch_unknown {
+				template <typename... Ts>
+				using f = typename dispatch<find_dispatch(sizeof...(Ts)), C>::template f<Ts...>;
+			};
 		}
 	}
 }

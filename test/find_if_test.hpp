@@ -13,7 +13,7 @@ namespace find_if_test {
 
 		uint_<400>{} = call_<make_sequence_<identity_, find_if_<is_<uint_<400>>>>, uint_<500>>{};
 
-		//(void)(1== (pack_(false, 'a', 1, true) >>= find_if_<is_<int>>{}));
+		(void)(1 == (val_pack_(false, 'a', 1, true) >>= find_if_<is_<int>>{}));
 
 		std::unique_ptr<int> p = pack_(std::unique_ptr<int>{}) >>= find_if_<always_<true_>>{};
 

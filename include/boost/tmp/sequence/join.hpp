@@ -85,6 +85,13 @@ namespace boost {
 				template <typename... Ts>
 				using f = typename join_loop<(sizeof...(Ts) > 8)>::template f<C, Ts...>;
 			};
+
+			template <unsigned N, typename C>
+			struct dispatch<N, join_<C>> {
+				template <typename... Ts>
+				using f = typename join_loop<(
+				        sizeof...(Ts) > 8)>::template f<dispatch_unknown<C>::template f, Ts...>;
+			};
 		}
 	}
 }

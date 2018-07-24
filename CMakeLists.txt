@@ -7,7 +7,7 @@ add_library(boost_tmp INTERFACE)
 # to support those features. The c++ version is not explicitly set, so that cmake can figure
 # things out by itself
 target_compile_features(boost_tmp INTERFACE
-		cxx_generic_lambdas
+		#cxx_generic_lambdas
 		cxx_variable_templates
 		cxx_variadic_templates
 		cxx_constexpr
@@ -17,7 +17,7 @@ target_compile_features(boost_tmp INTERFACE
 		cxx_right_angle_brackets
 		cxx_static_assert
 		cxx_uniform_initialization
-		cxx_user_literals
+		#cxx_user_literals
 		${CPP_EXTRA_FEATURES})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/boost/)

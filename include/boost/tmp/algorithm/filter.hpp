@@ -10,6 +10,7 @@
 
 #include "../call.hpp"
 #include "../detail/dispatch.hpp"
+#include "../detail/expression.hpp"
 #include "../is.hpp"
 #include "../pack.hpp"
 #include "../sequence/fork.hpp"
@@ -35,32 +36,48 @@ namespace boost {
 			struct ast<filter_<F, listify_>, Tail> {
 				filter_<F, listify_> head;
 				Tail tail;
-				template <typename... Is, typename... Ns, typename... Ts, typename... As>
-				constexpr auto f(list_<list_<Ts...>, list_<Is...>, list_<Ns...>>, As &&... as) {
-					auto p = fast_pack<detail::indexed_base<Ns, Ts>...>{static_cast<Ts>(as)...};
-					return tail.f(typename Tail::template exec<typename Is::type...>{},
-					              static_cast<typename Is::type>(static_cast<Is &>(p).data)...);
+				template <typename... Ts, typename... FBs, typename... Bs>
+				constexpr auto f(list_<list_<FBs...>, list_<Ts...>>, const pack<Bs...> &&p) {
+					return tail.f(
+					        typename Tail::template exec<Ts...>{},
+					        pack<Ts...>{Ts{static_cast<const FBs &&>(std::move(p)).get()}...});
+				};
+				template <typename... Ts, typename... FBs, typename... Bs>
+				constexpr auto f(list_<list_<FBs...>, list_<Ts...>>, pack<Bs...> &&p) {
+					return tail.f(typename Tail::template exec<Ts...>{},
+					              pack<Ts...>{Ts{static_cast<FBs &&>(std::move(p)).get()}...});
+				};
+				template <typename... Ts, typename... FBs, typename... Bs>
+				constexpr auto f(list_<list_<FBs...>, list_<Ts...>>, const pack<Bs...> &p) {
+					return tail.f(typename Tail::template exec<Ts...>{},
+					              pack<Ts...>{Ts{static_cast<const FBs &>(p).get()}...});
 				};
 				template <typename... Ts>
-				using exec = call_<fork_<listify_, zip_with_index_<lift_<detail::indexed_base>,
-				                                                   filter_<unpack_<i1_<F>>>>,
-				                         size_<make_sequence_<>>, listify_>,
-				                   Ts...>;
+				using exec = call_<
+				        filter_<unpack_<i1_<F>>,
+				                fork_<listify_, transform_<unpack_<i1_<>>,
+				                                           zip_with_index_<lift_<detail::base>>>,
+				                      listify_>>,
+				        Ts...>;
 			};
 			template <typename F>
 			struct ast<filter_<F, listify_>, listify_> { // break recursion
 				filter_<F, listify_> head;
-				template <typename... Is, typename... Ns, typename... Ts>
-				constexpr auto f(list_<list_<Is...>, list_<Ns...>>, Ts... as) {
-					auto p = fast_pack<detail::indexed_base<Ns, Ts>...>{std::forward<Ts>(as)...};
-					(void)p;
-					return pack_(static_cast<Is &>(p).data...);
+				template <typename... Ts, typename... FBs, typename... Bs>
+				constexpr auto f(list_<list_<FBs...>, list_<Ts...>> t, const pack<Bs...> &&p) {
+					return pack<Ts...>{Ts{static_cast<const FBs &&>(p).get()}...};
+				};
+				template <typename... Ts, typename... FBs, typename... Bs>
+				constexpr auto f(list_<list_<FBs...>, list_<Ts...>> t, const pack<Bs...> &p) {
+					return pack<Ts...>{Ts{static_cast<const FBs &>(p).get()}...};
 				};
 				template <typename... Ts>
-				using exec = call_<fork_<zip_with_index_<lift_<detail::indexed_base>,
-				                                         filter_<unpack_<i1_<F>>>>,
-				                         size_<make_sequence_<>>, listify_>,
-				                   Ts...>;
+				using exec = call_<
+				        filter_<unpack_<i1_<F>>,
+				                fork_<listify_, transform_<unpack_<i1_<>>,
+				                                           zip_with_index_<lift_<detail::base>>>,
+				                      listify_>>,
+				        Ts...>;
 			};
 
 			template <typename F, typename C>
@@ -73,9 +90,7 @@ namespace boost {
 				using type = ast<filter_<F, listify_>, listify_>;
 			};
 		}
-
 		namespace detail {
-
 			template <unsigned N, template <typename...> class F, typename C>
 			struct filtery;
 
@@ -92,14 +107,15 @@ namespace boost {
 				                           C>::template f<(N - 1), U, Ts..., T>;
 			};
 			template <template <typename...> class F, typename C>
-			struct filtery<2, F, C> {
+			struct filtery<2, F, C> { // all the way around, remove last
 				template <unsigned N, typename T, typename... Ts>
-				using f = call_<C, Ts...>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts)), C>::template f<Ts...>;
 			};
 			template <template <typename...> class F, typename C>
-			struct filtery<3, F, C> {
+			struct filtery<3, F, C> { // all the way around, keep last
 				template <unsigned N, typename T, typename... Ts>
-				using f = call_<C, Ts..., T>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 1), C>::template f<Ts...,
+				                                                                             T>;
 			};
 
 			template <unsigned N, template <typename...> class F, typename C>

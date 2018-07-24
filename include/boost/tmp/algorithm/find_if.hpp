@@ -22,30 +22,36 @@ namespace boost {
 				Tail tail;
 				template <typename... Is, typename... Ns, typename... Ts>
 				constexpr auto f(list_<list_<Is...>, list_<Ns...>>, Ts... as) {
-					auto p = fast_pack<detail::indexed_base<Ns, Ts>...>{std::forward<Ts>(as)...};
+					auto p = pack<detail::base<Ns, Ts>...>{std::forward<Ts>(as)...};
 					return tail.f(typename Tail::template exec<typename Is::type...>{},
 					              static_cast<Is &>(p).data...);
 				};
 				template <typename... Ts>
-				using exec = call_<fork_<zip_with_index_<lift_<detail::indexed_base>,
-				                                         find_if_<unpack_<i1_<F>>>>,
-				                         size_<make_sequence_<>>, listify_>,
-				                   Ts...>;
+				using exec =
+				        call_<fork_<zip_with_index_<lift_<detail::base>, find_if_<unpack_<i1_<F>>>>,
+				                    size_<make_sequence_<>>, listify_>,
+				              Ts...>;
 			};
 			template <typename F>
 			struct ast<find_if_<F, identity_>, listify_> { // break recursion
 				find_if_<F, identity_> head;
-				template <typename I, typename... Ns, typename... ATs, typename... Ts,
-				          typename Ret = call_<index_<I>, ATs...>>
-				constexpr auto f(list_<list_<ATs...>, I, list_<Ns...>>, Ts &&... as) -> Ret {
-					auto p = fast_pack<detail::indexed_base<Ns, ATs>...>{static_cast<ATs>(as)...};
-					(void)p;
-					return static_cast<Ret>(static_cast<detail::indexed_base<I, Ret> &>(p).data);
+				template <typename T, typename... Bs>
+				constexpr auto f(list_<T>, pack<Bs...> &p) -> typename T::type {
+					return static_cast<const T &>(p).get();
+				};
+				template <typename T, typename... Bs>
+				constexpr auto f(list_<T>, const pack<Bs...> &&p) -> typename T::type {
+					return static_cast<const T &&>(p).get();
+				};
+				template <typename T, typename... Bs>
+				constexpr auto f(list_<T>, pack<Bs...> &&p) -> typename T::type {
+					return static_cast<T &&>(p).get();
 				};
 				template <typename... Ts>
-				using exec = call_<fork_<listify_, // forwars the actual types
-				                         find_if_<F>, size_<make_sequence_<>>, listify_>,
-				                   Ts...>;
+				using exec =
+				        list_<call_<fork_<find_if_<unpack_<i1_<F>>, lift_<index_, lift_<unpack_>>>,
+				                          listify_, call_f_<>>,
+				                    Ts...>>;
 			};
 
 			template <typename F, typename C>
@@ -150,7 +156,6 @@ namespace boost {
 				using f = typename dispatch<1, C>::template f<typename foldey<(select_foldey_loop(
 				        sizeof...(Ts)))>::template f<county<false, -1, F>, 0, Ts...>>;
 			};
-
 		}
 	}
 }

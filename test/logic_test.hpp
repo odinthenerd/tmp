@@ -8,18 +8,18 @@ namespace logic_test {
 	int run() {
 
 		bool_<false>{} = call_<and_<lift_<is_even>>, int_<1>, int_<1>, int_<1>, int_<1>, int_<1>,
-				int_<1>, int_<1>, int_<1>, int_<1>>{};
+		                       int_<1>, int_<1>, int_<1>, int_<1>>{};
 
 		bool_<false>{} = call_<and_<lift_<is_even>>, int_<2>, int_<1>, int_<1>, int_<1>, int_<1>,
-				int_<1>, int_<1>, int_<1>, int_<2>>{};
+		                       int_<1>, int_<1>, int_<1>, int_<2>>{};
 
 		bool_<true>{} = call_<and_<lift_<is_even>>, int_<2>, int_<2>, int_<2>>{};
 
 		bool_<false>{} = call_<or_<lift_<is_even>>, int_<1>, int_<1>, int_<1>, int_<1>, int_<1>,
-				int_<1>, int_<1>, int_<1>, int_<1>>{};
+		                       int_<1>, int_<1>, int_<1>, int_<1>>{};
 
 		bool_<true>{} = call_<or_<lift_<is_even>>, int_<1>, int_<1>, int_<1>, int_<1>, int_<1>,
-				int_<1>, int_<1>, int_<1>, int_<2>>{};
+		                      int_<1>, int_<1>, int_<1>, int_<2>>{};
 
 		bool_<true>{} = call_<or_<lift_<is_even>>, int_<2>, int_<2>, int_<2>>{};
 

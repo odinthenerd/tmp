@@ -34,10 +34,11 @@ namespace boost {
 		template <typename T, typename... Ts>
 		using call_t = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                         T>::template f<Ts...>::type;
-
+#if defined(__cpp_variable_templates)
 		template <typename T, typename... Ts>
 		constexpr auto call_v =
 		        detail::dispatch<detail::find_dispatch(sizeof...(Ts)), T>::template f<Ts...>::value;
+#endif
 
 		template <typename C = identity_>
 		struct call_f_ {};

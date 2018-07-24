@@ -14,21 +14,41 @@
 namespace boost {
 	namespace tmp {
 		namespace fusion {
-			template <typename... Ps, typename T, typename C>
-			constexpr auto operator>>=(fast_pack<Ps...> p, expr<T, C> &&ex) {
+			template <typename... Bs, typename T, typename C>
+			constexpr auto operator>>=(pack<Bs...> &&p, expr<T, C> &&ex) {
 				auto tree  = ex.reverse();
-				using type = typename decltype(tree)::template exec<typename Ps::type...>;
-				return tree.f(type{}, static_cast<typename Ps::type>(static_cast<Ps &>(p).data)...);
+				using type = typename decltype(tree)::template exec<Bs...>;
+				return tree.f(type{}, std::move(p));
 			};
 			// will SFINAE if there is no rebind specialization
-			template <typename... Ps, typename F, typename RF = typename rebind<F>::type>
-			constexpr auto operator>>=(fast_pack<Ps...> p, F f) {
-				using type = typename RF::template exec<typename Ps::type...>;
-				return RF{}.f(type{}, static_cast<typename Ps::type>(static_cast<Ps &>(p).data)...);
+			template <typename... Bs, typename F, typename RF = typename rebind<F>::type,
+			          typename type = typename RF::template exec<Bs...>>
+			constexpr auto operator>>=(const pack<Bs...> &&p, F f)
+			        -> decltype(RF{}.f(type{}, std::move(p))) {
+				return RF{}.f(type{}, std::move(p));
+			};
+			// will SFINAE if there is no rebind specialization
+			template <typename... Bs, typename F, typename RF = typename rebind<F>::type,
+			          typename type = typename RF::template exec<Bs...>>
+			constexpr auto operator>>=(pack<Bs...> &&p, F f)
+			        -> decltype(RF{}.f(type{}, std::move(p))) {
+				return RF{}.f(type{}, std::move(p));
+			};
+			// will SFINAE if there is no rebind specialization
+			template <typename... Bs, typename F, typename RF = typename rebind<F>::type,
+			          typename type = typename RF::template exec<Bs...>>
+			constexpr auto operator>>=(const pack<Bs...> &p, F f) {
+				return RF{}.f(type{}, p);
+			};
+			// will SFINAE if there is no rebind specialization
+			template <typename... Bs, typename F, typename RF = typename rebind<F>::type>
+			constexpr auto operator>>=(pack<Bs...> &p, F f) {
+				using type = typename RF::template exec<Bs...>;
+				return RF{}.f(type{}, p);
 			};
 			// will SFINAE if rhs can not be called with pack parameters
 			template <typename... Ps, typename F>
-			constexpr auto operator>>=(fast_pack<Ps...> p, F f)
+			constexpr auto operator>>=(pack<Ps...> &p, F f)
 			        -> decltype(f(static_cast<Ps &>(p).data...)) {
 				return f(static_cast<Ps &>(p).data...);
 			};

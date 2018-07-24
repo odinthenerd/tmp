@@ -15,22 +15,9 @@
 namespace boost {
 	namespace tmp {
 		namespace fusion {
-			template <typename... Ts>
-			struct fast_pack : Ts... {
-
-				template <typename... As,
-				          typename = std::enable_if_t<(sizeof...(Ts) == sizeof...(As))>>
-				constexpr fast_pack(As &&... args) : Ts{std::forward<As>(args)}... {
-				}
-			};
-
-			template <typename T>
-			struct fast_pack<T> : T {
-				template <typename A,
-				          typename = std::enable_if_t<
-				                  (!std::is_same<std::remove_reference_t<std::remove_const_t<A>>,
-				                                 fast_pack<T>>::value)>>
-				constexpr fast_pack(A &&arg) : T{std::forward<A>(arg)} {
+			template <typename... Bs>
+			struct pack : Bs... {
+				constexpr pack(Bs &&... as) : Bs{std::move(as)}... {
 				}
 			};
 
@@ -41,27 +28,71 @@ namespace boost {
 
 			namespace detail {
 				template <typename I, typename T>
-				struct indexed_base {
+				struct base {
 					T data;
 					using type = T;
+					constexpr T &get() const & {
+						return data;
+					}
+					constexpr const T &&get() const && {
+						return std::move(data);
+					}
+					constexpr T &&get() && {
+						return std::move(data);
+					}
 				};
 
-				template <typename... Bs, typename P>
-				auto pack_from_bases_r(list_<Bs...>, P &&p) {
-					return fast_pack<Bs...>{static_cast<Bs &&>(p)...};
+				template <typename I, typename T>
+				struct base<I, T &&> {
+					T &&data;
+					using type = T;
+					constexpr const T &get() const & {
+						return data;
+					}
+					constexpr const T &&get() const && {
+						return std::move(data);
+					}
+					constexpr T &&get() && {
+						return std::move(data);
+					}
 				};
-				template <typename... Bs, typename P>
-				auto pack_from_bases_l(list_<Bs...>, P &p) {
-					return fast_pack<Bs...>{static_cast<Bs &>(p)...};
+
+				template <typename I, typename T>
+				struct base<I, T &> {
+					T data;
+					using type = T;
+					constexpr const T &get() const {
+						return data;
+					}
+				};
+				/*
+				                template <typename... Bs, typename P>
+				                auto pack_from_bases_r(list_<Bs...>, P &&p) {
+				                    return fast_pack<Bs...>{static_cast<Bs &&>(p)...};
+				                };
+				                template <typename... Bs, typename P>
+				                auto pack_from_bases_l(list_<Bs...>, P &p) {
+				                    return fast_pack<Bs...>{static_cast<Bs &>(p)...};
+				                };*/
+
+				template <typename... Ts, typename... Bs, typename... Us>
+				constexpr fusion::pack<Bs...> pack_impl(list_<Bs...>, Us &&... as) {
+					return fusion::pack<Bs...>{Bs{std::forward<Us>(as)}...};
 				};
 			}
 		}
 
 		template <typename... Ts>
 		constexpr auto pack_(Ts &&... args) {
-			return call_<
-			        zip_with_index_<lift_<fusion::detail::indexed_base>, lift_<fusion::fast_pack>>,
-			        decltype(std::forward<Ts>(args))...>{std::forward<Ts>(args)...};
+			return fusion::detail::pack_impl(call_<zip_with_index_<lift_<fusion::detail::base>>,
+			                                       decltype(std::forward<Ts>(args))...>{},
+			                                 std::forward<Ts>(args)...);
+		}
+		template <typename... Ts>
+		constexpr auto val_pack_(Ts... args) {
+			return fusion::detail::pack_impl(
+			        call_<zip_with_index_<lift_<fusion::detail::base>>, Ts...>{},
+			        std::move(args)...);
 		}
 	}
 }

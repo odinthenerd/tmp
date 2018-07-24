@@ -53,12 +53,12 @@ namespace boost {
 				static constexpr int value = 1;
 			};
 
-
 			template <unsigned N, template <typename...> class F, typename C>
 			struct dispatch<N, and_<lift_<F>, C>> {
 				template <typename... Ts>
-				using f = typename dispatch<1, C>::template f<call_<is_<nothing_>, typename foldey<(
-						select_foldey_loop(sizeof...(Ts)))>::template f<andy<false, F>, 0, Ts...>>>;
+				using f = typename dispatch<1, C>::template f<
+				        call_<is_<nothing_>, typename foldey<(select_foldey_loop(sizeof...(
+				                                     Ts)))>::template f<andy<false, F>, 0, Ts...>>>;
 			};
 			template <template <typename...> class F, typename C>
 			struct dispatch<0, and_<lift_<F>, C>> {
@@ -68,8 +68,10 @@ namespace boost {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, and_<F, C>> {
 				template <typename... Ts>
-				using f = typename dispatch<1, C>::template f<call_<is_<nothing_>,typename foldey<(select_foldey_loop(sizeof...(Ts)))>::template f<
-						andy<false, dispatch<1, F>::template f>, 0, Ts...>>>;
+				using f = typename dispatch<1, C>::template f<
+				        call_<is_<nothing_>,
+				              typename foldey<(select_foldey_loop(sizeof...(Ts)))>::template f<
+				                      andy<false, dispatch<1, F>::template f>, 0, Ts...>>>;
 			};
 			template <typename F, typename C>
 			struct dispatch<0, and_<F, C>> {
@@ -80,8 +82,10 @@ namespace boost {
 			template <unsigned N, template <typename...> class F, typename C>
 			struct dispatch<N, or_<lift_<F>, C>> {
 				template <typename... Ts>
-				using f = typename dispatch<1, C>::template f<call_<is_<nothing_,not_<identity_>>, typename foldey<(
-						select_foldey_loop(sizeof...(Ts)))>::template f<ory<false, F>, 0, Ts...>>>;
+				using f = typename dispatch<1, C>::template f<
+				        call_<is_<nothing_, not_<identity_>>,
+				              typename foldey<(select_foldey_loop(
+				                      sizeof...(Ts)))>::template f<ory<false, F>, 0, Ts...>>>;
 			};
 			template <template <typename...> class F, typename C>
 			struct dispatch<0, or_<lift_<F>, C>> {
@@ -91,16 +95,16 @@ namespace boost {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, or_<F, C>> {
 				template <typename... Ts>
-				using f = typename dispatch<1, C>::template f<call_<is_<nothing_,not_<identity_>>, typename foldey<(select_foldey_loop(sizeof...(Ts)))>::template f<
-						ory<false, dispatch<1, F>::template f>, 0, Ts...>>>;
+				using f = typename dispatch<1, C>::template f<
+				        call_<is_<nothing_, not_<identity_>>,
+				              typename foldey<(select_foldey_loop(sizeof...(Ts)))>::template f<
+				                      ory<false, dispatch<1, F>::template f>, 0, Ts...>>>;
 			};
 			template <typename F, typename C>
 			struct dispatch<0, or_<F, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<1, C>::template f<bool_<false>>;
 			};
-
-
 		}
 	}
 }
