@@ -7,12 +7,14 @@
 //
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
+#include "detail/expression.hpp"
 #include "detail/fusion_execute.hpp"
 #include "detail/fusion_rebind.hpp"
 #include "pack.hpp"
 #include "sequence/fork.hpp"
 namespace boost {
 	namespace tmp {
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 			template <typename... Bs, typename T, typename C>
 			constexpr auto operator>>=(pack<Bs...> &&p, expr<T, C> &&ex) {
@@ -52,8 +54,9 @@ namespace boost {
 			        -> decltype(f(static_cast<Ps &>(p).data...)) {
 				return f(static_cast<Ps &>(p).data...);
 			};
-		}
-	}
-}
+		} // namespace fusion
+#endif
+	} // namespace tmp
+} // namespace boost
 
 #endif

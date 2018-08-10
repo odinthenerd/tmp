@@ -23,9 +23,9 @@ namespace boost {
 		namespace detail {
 			template <unsigned N, typename Input, typename F, typename C>
 			struct dispatch<N, replace_if_<Input, F, C>>
-			        : dispatch<N, transform_<if_<F, always_<Input>, identity_>, C>> {};
-		}
-	}
-}
+			    : dispatch<N, transform_<if_<F, always_<Input>, identity_>, C>> {};
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

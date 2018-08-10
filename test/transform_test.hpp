@@ -9,4 +9,4 @@ namespace transform_test {
 
 		return 0;
 	}
-}
+} // namespace transform_test

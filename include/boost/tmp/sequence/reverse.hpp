@@ -177,8 +177,8 @@ namespace boost {
 			};
 			template <unsigned N, typename C>
 			struct dispatch<N, reverse_<C>> : dispatch<65, reverse_<C>> {};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

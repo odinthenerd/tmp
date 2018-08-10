@@ -1,6 +1,8 @@
 #include <memory>
 #include "test_util.hpp"
 #include "../include/boost/tmp/algorithm/find_if.hpp"
+#include "../include/boost/tmp/is.hpp"
+#include "../include/boost/tmp/sequence/unpack.hpp"
 
 namespace find_if_test {
 	template <typename T>
@@ -12,11 +14,11 @@ namespace find_if_test {
 		nothing_{} = call_<find_if_<lift_<is_even>>, int_<1>>{};
 
 		uint_<400>{} = call_<make_sequence_<identity_, find_if_<is_<uint_<400>>>>, uint_<500>>{};
-
+#ifdef BOOST_TMP_CPP14
 		(void)(1 == (val_pack_(false, 'a', 1, true) >>= find_if_<is_<int>>{}));
 
 		std::unique_ptr<int> p = pack_(std::unique_ptr<int>{}) >>= find_if_<always_<true_>>{};
-
+#endif
 		return 0;
 	}
-}
+} // namespace find_if_test

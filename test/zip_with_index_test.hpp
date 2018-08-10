@@ -12,4 +12,4 @@ namespace zip_with_index_test {
 
 		return 0;
 	}
-}
+} // namespace zip_with_index_test

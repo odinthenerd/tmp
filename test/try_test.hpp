@@ -1,4 +1,5 @@
 #include "test_util.hpp"
+#include "../include/boost/tmp/try.hpp"
 
 namespace try_test {
 	template <typename T>
@@ -14,4 +15,4 @@ namespace try_test {
 
 		return 0;
 	}
-}
+} // namespace try_test

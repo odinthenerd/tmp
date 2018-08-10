@@ -32,8 +32,8 @@ namespace boost {
 				template <typename L>
 				using f = typename detail::container_impl<L, C>::type;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

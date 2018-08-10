@@ -44,8 +44,8 @@ namespace boost {
 				        typename dispatch<(N + (N > sizeof...(Ts))), F2>::template f<Ts...>,
 				        typename dispatch<(N + (N > sizeof...(Ts))), F3>::template f<Ts...>>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

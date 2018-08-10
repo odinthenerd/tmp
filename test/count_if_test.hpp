@@ -17,4 +17,4 @@ namespace count_if_test {
 
 		return 0;
 	}
-}
+} // namespace count_if_test

@@ -25,4 +25,4 @@ namespace logic_test {
 
 		return 0;
 	}
-}
+} // namespace logic_test

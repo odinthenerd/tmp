@@ -14,6 +14,7 @@
 
 namespace boost {
 	namespace tmp {
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 
 			template <typename H, typename T>
@@ -83,8 +84,9 @@ namespace boost {
 						return {{}, l};
 					}
 				};
-			}
-		}
-	}
-}
+			} // namespace detail
+		} // namespace fusion
+#endif
+	} // namespace tmp
+} // namespace boost
 #endif

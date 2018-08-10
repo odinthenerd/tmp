@@ -10,6 +10,7 @@
 
 #include <type_traits>
 #include "algorithm/find_if.hpp"
+#include "is.hpp"
 #include "vocabulary.hpp"
 
 namespace boost {
@@ -105,7 +106,7 @@ namespace boost {
 				template <typename... Ts>
 				using f = typename dispatch<1, C>::template f<bool_<false>>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

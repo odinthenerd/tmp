@@ -22,7 +22,7 @@ namespace boost {
 				template <typename T>
 				using f = typename dispatch<1, C>::template f<bool_<std::is_same<P, T>::value>>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

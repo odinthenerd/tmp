@@ -14,6 +14,7 @@
 
 namespace boost {
 	namespace tmp {
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 			template <typename... Bs>
 			struct pack : Bs... {
@@ -79,8 +80,8 @@ namespace boost {
 				constexpr fusion::pack<Bs...> pack_impl(list_<Bs...>, Us &&... as) {
 					return fusion::pack<Bs...>{Bs{std::forward<Us>(as)}...};
 				};
-			}
-		}
+			} // namespace detail
+		} // namespace fusion
 
 		template <typename... Ts>
 		constexpr auto pack_(Ts &&... args) {
@@ -94,6 +95,7 @@ namespace boost {
 			        call_<zip_with_index_<lift_<fusion::detail::base>>, Ts...>{},
 			        std::move(args)...);
 		}
-	}
-}
+#endif
+	} // namespace tmp
+} // namespace boost
 #endif

@@ -53,7 +53,7 @@ namespace boost {
 				using f = typename if_impl<P<U>::value>::template f<list_<U>, list_<>>;
 #endif
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

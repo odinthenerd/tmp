@@ -23,9 +23,9 @@ namespace boost {
 		namespace detail {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, remove_if_<F, C>>
-			        : dispatch<N, transform_<if_<F, always_<list_<>>, listify_>, join_<C>>> {};
-		}
-	}
-}
+			    : dispatch<N, transform_<if_<F, always_<list_<>>, listify_>, join_<C>>> {};
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

@@ -50,8 +50,8 @@ namespace boost {
 				                                         typename dispatch<1, F2>::template f<T2>,
 				                                         typename dispatch<1, F3>::template f<T3>>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

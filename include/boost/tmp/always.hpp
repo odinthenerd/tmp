@@ -22,7 +22,7 @@ namespace boost {
 				template <typename...>
 				using f = typename dispatch<1, C>::template f<T>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

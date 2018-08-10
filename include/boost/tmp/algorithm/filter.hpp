@@ -23,14 +23,16 @@ namespace boost {
 	namespace tmp {
 		template <typename F, typename C = listify_>
 		struct filter_ {
+#ifdef BOOST_TMP_CPP14
 			template <typename CT>
 			auto operator|(CT c) {
 				static_assert(call_<is_<listify_>, C>::value,
 				              "cannot add value continuation, type continuation already specified");
 				return fusion::detail::make_expr<CT>{}(filter_<F, listify_>{}, std::move(c));
 			}
+#endif
 		};
-
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 			template <typename F, typename Tail>
 			struct ast<filter_<F, listify_>, Tail> {
@@ -53,12 +55,12 @@ namespace boost {
 					              pack<Ts...>{Ts{static_cast<const FBs &>(p).get()}...});
 				};
 				template <typename... Ts>
-				using exec = call_<
-				        filter_<unpack_<i1_<F>>,
-				                fork_<listify_, transform_<unpack_<i1_<>>,
-				                                           zip_with_index_<lift_<detail::base>>>,
-				                      listify_>>,
-				        Ts...>;
+				using exec = call_<filter_<unpack_<i1_<F>>,
+				                           fork_<listify_,
+				                                 transform_<unpack_<i1_<>>,
+				                                            zip_with_index_<lift_<detail::base>>>,
+				                                 listify_>>,
+				                   Ts...>;
 			};
 			template <typename F>
 			struct ast<filter_<F, listify_>, listify_> { // break recursion
@@ -72,12 +74,12 @@ namespace boost {
 					return pack<Ts...>{Ts{static_cast<const FBs &>(p).get()}...};
 				};
 				template <typename... Ts>
-				using exec = call_<
-				        filter_<unpack_<i1_<F>>,
-				                fork_<listify_, transform_<unpack_<i1_<>>,
-				                                           zip_with_index_<lift_<detail::base>>>,
-				                      listify_>>,
-				        Ts...>;
+				using exec = call_<filter_<unpack_<i1_<F>>,
+				                           fork_<listify_,
+				                                 transform_<unpack_<i1_<>>,
+				                                            zip_with_index_<lift_<detail::base>>>,
+				                                 listify_>>,
+				                   Ts...>;
 			};
 
 			template <typename F, typename C>
@@ -89,7 +91,8 @@ namespace boost {
 			struct rebind<filter_<F, listify_>> {
 				using type = ast<filter_<F, listify_>, listify_>;
 			};
-		}
+		} // namespace fusion
+#endif
 		namespace detail {
 			template <unsigned N, template <typename...> class F, typename C>
 			struct filtery;
@@ -144,8 +147,8 @@ namespace boost {
 				template <typename... Ts>
 				using f = typename dispatch<0, C>::template f<>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

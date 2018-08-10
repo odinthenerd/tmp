@@ -58,7 +58,7 @@ namespace boost {
 				           T2>>;
 			};
 #undef F_
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

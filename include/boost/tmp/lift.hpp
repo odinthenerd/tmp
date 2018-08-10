@@ -8,6 +8,7 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "detail/capabilities.hpp"
 #include "detail/dispatch.hpp"
 #include "identity.hpp"
 
@@ -18,6 +19,7 @@ namespace boost {
 		struct lift_ {};
 
 		namespace detail {
+#ifdef BOOST_TMP_CLANG_ARITY_BUG
 			template <template <typename...> class F, typename C>
 			struct dispatch<1, lift_<F, C>> {
 				template <typename T>
@@ -38,12 +40,13 @@ namespace boost {
 				template <typename T0, typename T1, typename T2, typename T3>
 				using f = typename dispatch<1, C>::template f<F<T0, T1, T2, T3>>;
 			};
+#endif
 			template <unsigned N, template <typename...> class F, typename C>
 			struct dispatch<N, lift_<F, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<1, C>::template f<F<Ts...>>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

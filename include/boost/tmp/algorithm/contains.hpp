@@ -15,7 +15,7 @@ namespace boost {
 	namespace tmp {
 		template <typename F, typename C = identity_>
 		struct contains_ {};
-	}
-}
+	} // namespace tmp
+} // namespace boost
 
 #endif

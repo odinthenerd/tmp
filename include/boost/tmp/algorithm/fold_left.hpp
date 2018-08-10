@@ -42,15 +42,13 @@ namespace boost {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, fold_left_<F, C>> {
 				template <typename In, typename T0, typename T1, typename T2, typename... Ts>
-				using f =
-				        typename dispatch<find_dispatch(sizeof...(Ts)),
-				                          fold_left_<F, C>>::template f<F_(F_(F_(In, T0), T1), T2),
-				                                                        Ts...>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts)), fold_left_<F, C>>::
+				        template f<F_(F_(F_(In, T0), T1), T2), Ts...>;
 			};
 
 #undef F_
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

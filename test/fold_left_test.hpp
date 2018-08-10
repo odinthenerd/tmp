@@ -4,4 +4,4 @@ namespace fold_left_test {
 	int run() {
 		return 0;
 	}
-}
+} // namespace fold_left_test

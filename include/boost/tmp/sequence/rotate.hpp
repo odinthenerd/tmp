@@ -127,16 +127,16 @@ namespace boost {
 				using f = typename dispatch<0, C>::template f<>;
 			};
 			template <unsigned P, typename C, unsigned Step = rotate_select(P)>
-			struct make_rotate : rotate_impl<rotate_select(Step),
-			                                 rotate_<uint_<(P - Step)>, C>> { /* not done */
+			struct make_rotate
+			    : rotate_impl<rotate_select(Step), rotate_<uint_<(P - Step)>, C>> { /* not done */
 			};
 			template <unsigned P, typename C>
 			struct make_rotate<P, C, P> : rotate_impl<P, C> {};
 
 			template <unsigned N, typename P, typename C>
 			struct dispatch<N, rotate_<P, C>> : make_rotate<P::value, C> {};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

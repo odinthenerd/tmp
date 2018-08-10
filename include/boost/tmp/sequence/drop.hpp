@@ -126,15 +126,15 @@ namespace boost {
 
 			template <unsigned P, typename C, unsigned Step = drop_select(P)>
 			struct make_drop
-			        : drop_impl<drop_select(Step), drop_<uint_<(P - Step)>, C>> { /* not done */
+			    : drop_impl<drop_select(Step), drop_<uint_<(P - Step)>, C>> { /* not done */
 			};
 			template <unsigned P, typename C>
 			struct make_drop<P, C, P> : drop_impl<P, C> {};
 
 			template <unsigned N, typename P, typename C>
 			struct dispatch<N, drop_<P, C>> : make_drop<P::value, C> {};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

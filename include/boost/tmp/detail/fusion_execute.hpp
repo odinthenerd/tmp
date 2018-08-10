@@ -12,7 +12,7 @@
 namespace boost {
 	namespace tmp {
 		namespace fusion {}
-	}
-}
+	} // namespace tmp
+} // namespace boost
 
 #endif

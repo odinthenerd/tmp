@@ -15,24 +15,24 @@ namespace boost {
 		template <typename I, typename C = identity_>
 		struct index_ {};
 		template <typename C = identity_>
-		using front_         = index_<uint_<0>, C>;
+		using front_ = index_<uint_<0>, C>;
 
 		template <typename C = identity_>
-		using i0_            = index_<uint_<0>, C>;
+		using i0_ = index_<uint_<0>, C>;
 		template <typename C = identity_>
-		using i1_            = index_<uint_<1>, C>;
+		using i1_ = index_<uint_<1>, C>;
 		template <typename C = identity_>
-		using i2_            = index_<uint_<2>, C>;
+		using i2_ = index_<uint_<2>, C>;
 		template <typename C = identity_>
-		using i3_            = index_<uint_<3>, C>;
+		using i3_ = index_<uint_<3>, C>;
 		template <typename C = identity_>
-		using i4_            = index_<uint_<4>, C>;
+		using i4_ = index_<uint_<4>, C>;
 		template <typename C = identity_>
-		using i5_            = index_<uint_<5>, C>;
+		using i5_ = index_<uint_<5>, C>;
 		template <typename C = identity_>
-		using i6_            = index_<uint_<6>, C>;
+		using i6_ = index_<uint_<6>, C>;
 		template <typename C = identity_>
-		using i7_            = index_<uint_<7>, C>;
+		using i7_ = index_<uint_<7>, C>;
 		namespace detail {
 			template <unsigned N, typename I, typename C>
 			struct dispatch<N, index_<I, C>> : dispatch<N, index_<uint_<I::value>, C>> {};
@@ -80,8 +80,8 @@ namespace boost {
 				          typename T5, typename T6, typename T7, typename... Ts>
 				using f = typename dispatch<1, C>::template f<T7>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

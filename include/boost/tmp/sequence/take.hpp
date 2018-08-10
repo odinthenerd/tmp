@@ -23,10 +23,10 @@ namespace boost {
 				template <typename... Ts>
 				using f = typename dispatch<
 				        (N + sizeof...(Ts) < 0),
-				        rotate_<P, drop_<uint_<(sizeof...(Ts)-P::value)>, C>>>::template f<Ts...>;
+				        rotate_<P, drop_<uint_<(sizeof...(Ts) - P::value)>, C>>>::template f<Ts...>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

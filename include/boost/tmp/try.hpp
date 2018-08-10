@@ -35,7 +35,7 @@ namespace boost {
 				using f = typename dispatch<1, C>::template f<typename decltype(
 				        try_f(lift_<F>{}, list_<Ts...>{}))::type>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

@@ -35,6 +35,6 @@ namespace boost {
 		using false_ = bool_<false>;
 
 		struct nothing_ {};
-	}
-}
+	} // namespace tmp
+} // namespace boost
 #endif

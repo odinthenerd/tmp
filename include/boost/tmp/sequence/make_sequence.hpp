@@ -32,8 +32,8 @@ namespace boost {
 				using f = typename sequence_impl<std::make_index_sequence<N::value>>::template f<F,
 				                                                                                 C>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

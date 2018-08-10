@@ -1,4 +1,6 @@
 #include "test_util.hpp"
+#include "../include/boost/tmp/sequence/reverse.hpp"
+#
 
 namespace reverse_test {
 	int run() {
@@ -22,4 +24,4 @@ namespace reverse_test {
 
 		return 0;
 	}
-}
+} // namespace reverse_test

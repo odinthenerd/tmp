@@ -13,21 +13,21 @@
 namespace boost {
 	namespace tmp {
 		struct identity_ {};
-
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 			template <>
 			struct rebind<identity_> {
 				using type = identity_;
 			};
-		}
-
+		} // namespace fusion
+#endif
 		namespace detail {
 			template <>
 			struct dispatch<1, identity_> {
 				template <typename T>
 				using f = T;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 #endif

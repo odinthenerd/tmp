@@ -21,8 +21,8 @@ namespace boost {
 				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 1), C>::template f<T,
 				                                                                             Ts...>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

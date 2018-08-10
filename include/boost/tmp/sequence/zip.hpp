@@ -19,7 +19,7 @@ namespace boost {
 		namespace detail {
 			// TODO add impl
 		}
-	}
-}
+	} // namespace tmp
+} // namespace boost
 
 #endif

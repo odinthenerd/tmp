@@ -20,8 +20,8 @@ namespace boost {
 				template <typename T, typename U>
 				using f = typename dispatch<2, C>::template f<U, T>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

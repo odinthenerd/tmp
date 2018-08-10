@@ -66,7 +66,7 @@ namespace boost {
 				          typename T25 = list_<>, typename T26 = list_<>, typename T27 = list_<>,
 				          typename T28 = list_<>, typename T29 = list_<>, typename T30 = list_<>,
 				          typename T31 = list_<>, typename... Ts>
-				using f                = typename join_loop<(sizeof...(Ts) > 8)>::template f<
+				using f = typename join_loop<(sizeof...(Ts) > 8)>::template f<
 				        joiner<C, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14,
 				               T15, T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28,
 				               T29, T30, T31>::template f,
@@ -92,8 +92,8 @@ namespace boost {
 				using f = typename join_loop<(
 				        sizeof...(Ts) > 8)>::template f<dispatch_unknown<C>::template f, Ts...>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

@@ -10,13 +10,15 @@
 
 namespace boost {
 	namespace tmp {
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 			// to make a metafunction fusion capable this traits must be specialized
 			// with the rebound version of the metafunction to be used in fusion context
 			template <typename T>
 			struct rebind;
-		}
-	}
-}
+		} // namespace fusion
+#endif
+	} // namespace tmp
+} // namespace boost
 
 #endif

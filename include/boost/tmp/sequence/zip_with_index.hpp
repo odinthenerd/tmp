@@ -32,8 +32,8 @@ namespace boost {
 				using f = typename indexer<sizeof...(Ts)>::template f<dispatch<2, F>::template f,
 				                                                      dispatch<N, C>, Ts...>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

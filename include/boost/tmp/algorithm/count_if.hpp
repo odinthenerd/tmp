@@ -23,10 +23,10 @@ namespace boost {
 		namespace detail {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, count_if_<F, C>>
-			        : dispatch<N, transform_<if_<F, always_<list_<void>>, always_<list_<>>>,
-			                                 join_<size_<C>>>> {};
-		}
-	}
-}
+			    : dispatch<N, transform_<if_<F, always_<list_<void>>, always_<list_<>>>,
+			                             join_<size_<C>>>> {};
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

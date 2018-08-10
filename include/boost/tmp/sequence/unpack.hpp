@@ -28,8 +28,8 @@ namespace boost {
 				template <typename L>
 				using f = typename detail::unpack_impl<C, L>::type;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

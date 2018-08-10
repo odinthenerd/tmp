@@ -26,7 +26,7 @@ namespace boost {
 			template <typename T>
 			using maybe_impl =
 			        typename maybe_test_impl<std::is_same<T, nothing_>::value>::template f<T>;
-		}
+		} // namespace detail
 		template <typename T, typename... Ts>
 		using call_ = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                        T>::template f<Ts...>;
@@ -50,7 +50,7 @@ namespace boost {
 				using f = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 				                                    F>::template f<Ts...>;
 			};
-		}
+		} // namespace detail
 
 		template <typename T, typename... Ts>
 		using maybe_ =
@@ -66,6 +66,6 @@ namespace boost {
 		constexpr auto maybe_v =
 		        detail::maybe_impl<typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                                     T>::template f<Ts...>>::value;
-	}
-}
+	} // namespace tmp
+} // namespace boost
 #endif

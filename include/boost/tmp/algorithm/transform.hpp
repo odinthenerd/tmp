@@ -30,8 +30,8 @@ namespace boost {
 				template <typename... Ts>
 				using f = typename dispatch<(N + (N > sizeof...(Ts))), C>::template f<F<Ts>...>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif

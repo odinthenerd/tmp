@@ -8,13 +8,16 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "../fusion.hpp"
+#include "../sequence/index.hpp"
+#include "../sequence/size.hpp"
+#include "../sequence/unpack.hpp"
 #include "../vocabulary.hpp"
-
 namespace boost {
 	namespace tmp {
 		template <typename F, typename C = identity_>
 		struct find_if_ {};
-
+#ifdef BOOST_TMP_CPP14
 		namespace fusion {
 			template <typename F, typename Tail>
 			struct ast<find_if_<F, identity_>, Tail> {
@@ -63,9 +66,11 @@ namespace boost {
 			struct rebind<find_if_<F, identity_>> {
 				using type = ast<find_if_<F, identity_>, listify_>;
 			};
-		}
-
+		} // namespace fusion
+#endif
 		namespace detail {
+			template <typename T>
+			using id_ = T; // weird clang workaround
 			template <bool Found, int At, template <typename...> class F>
 			struct county {
 				static constexpr int value = -1;
@@ -80,8 +85,7 @@ namespace boost {
 			};
 
 			constexpr unsigned select_foldey_loop(int rest_size) {
-				return rest_size < 8 ? (rest_size == 0 ? 1000 : 1001) : rest_size < 32 ? 1008 :
-				                                                                         1032;
+				return rest_size < 8 ? (rest_size == 0 ? 1000 : 1001) : 1008;
 			}
 			constexpr unsigned select_foldey(int chunk_size, int rest_size, int found_at_index) {
 				return found_at_index == -1 ? select_foldey_loop(rest_size) :
@@ -110,36 +114,9 @@ namespace boost {
 				          typename... Ts>
 				using f = typename foldey<select_foldey(
 				        8, sizeof...(Ts),
-				        F::template f<T0>::template f<T1>::template f<T2>::template f<T3>::
-				                template f<T4>::template f<T5>::template f<T6>::template f<
-				                        T7>::value)>::template f<F, N + 8, Ts...>;
-			};
-			template <>
-			struct foldey<1032> {
-				template <typename F, unsigned N, typename T0, typename T1, typename T2,
-				          typename T3, typename T4, typename T5, typename T6, typename T7,
-				          typename T8, typename T9, typename T10, typename T11, typename T12,
-				          typename T13, typename T14, typename T15, typename T16, typename T17,
-				          typename T18, typename T19, typename T20, typename T21, typename T22,
-				          typename T23, typename T24, typename T25, typename T26, typename T27,
-				          typename T28, typename T29, typename T30, typename T31, typename... Ts>
-				using f = typename foldey<select_foldey(
-				        32, sizeof...(Ts),
-				        F::template f<T0>::template f<T1>::template f<T2>::template f<
+				        id_<typename F::template f<T0>::template f<T1>::template f<T2>::template f<
 				                T3>::template f<T4>::template f<T5>::template f<T6>::
-				                template f<T7>::template f<T8>::template f<T9>::template f<
-				                        T10>::template f<T11>::template f<T12>::template f<T13>::
-				                        template f<T14>::template f<T15>::template f<
-				                                T16>::template f<T17>::template f<T18>::
-				                                template f<T19>::template f<T20>::template f<
-				                                        T21>::template f<T22>::template f<T23>::
-				                                        template f<T24>::template f<
-				                                                T25>::template f<T26>::
-				                                                template f<T27>::template f<
-				                                                        T28>::template f<T29>::
-				                                                        template f<T30>::template f<
-				                                                                T31>::value)>::
-				        template f<F, N + 32, Ts...>;
+				                    template f<T7>>::value)>::template f<F, N + 8, Ts...>;
 			};
 
 			template <unsigned N, typename F, typename C>
@@ -156,8 +133,8 @@ namespace boost {
 				using f = typename dispatch<1, C>::template f<typename foldey<(select_foldey_loop(
 				        sizeof...(Ts)))>::template f<county<false, -1, F>, 0, Ts...>>;
 			};
-		}
-	}
-}
+		} // namespace detail
+	} // namespace tmp
+} // namespace boost
 
 #endif
