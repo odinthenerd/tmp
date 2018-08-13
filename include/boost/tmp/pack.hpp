@@ -79,7 +79,7 @@ namespace boost {
 
 				template <typename... Ts, typename... Bs, typename... Us>
 				constexpr fusion::pack<Bs...> pack_impl(list_<Bs...>, Us &&... as) {
-					return fusion::pack<Bs...>{Bs{std::forward<Us>(as)}...};
+					return fusion::pack<Bs...>(Bs{std::forward<Us>(as)}...);
 				};
 			} // namespace detail
 		} // namespace fusion
@@ -97,13 +97,6 @@ namespace boost {
 					std::move(args)...);
 		}
 
-		//older clang wordaround for empty packs
-		constexpr fusion::pack<> pack_() {
-			return fusion::pack<>{};
-		}
-		constexpr fusion::pack<> val_pack_() {
-			return fusion::pack<>{};
-		}
 #endif
 	} // namespace tmp
 } // namespace boost
