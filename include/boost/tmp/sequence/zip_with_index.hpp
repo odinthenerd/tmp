@@ -22,15 +22,20 @@ namespace boost {
 
 			template <unsigned N, std::size_t... Is>
 			struct indexer<N, std::index_sequence<Is...>> {
-				template <template <typename...> class F, typename C, typename... Ts>
-				using f = typename C::template f<F<uint_<Is>, Ts>...>;
+				template <typename F, template <typename...> class C, typename... Ts>
+				using f = C<typename dispatch<2, F>::template f<uint_<Is>, Ts>...>;
 			};
 
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, zip_with_index_<F, C>> {
 				template <typename... Ts>
-				using f = typename indexer<sizeof...(Ts)>::template f<dispatch<2, F>::template f,
-				                                                      dispatch<N, C>, Ts...>;
+				using f = typename indexer<sizeof...(Ts)>::template f<
+				        F, dispatch<find_dispatch(sizeof...(Ts)), C>::template f, Ts...>;
+			};
+			template <unsigned N, typename F, template <typename...> class C>
+			struct dispatch<N, zip_with_index_<F, lift_<C>>> {
+				template <typename... Ts>
+				using f = typename indexer<sizeof...(Ts)>::template f<F, C, Ts...>;
 			};
 		} // namespace detail
 	} // namespace tmp

@@ -24,25 +24,25 @@ namespace boost {
 			struct dispatch<N, fork_<F0, F1, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<2, C>::template f<
-				        typename dispatch<(N + (N > sizeof...(Ts))), F0>::template f<Ts...>,
-				        typename dispatch<(N + (N > sizeof...(Ts))), F1>::template f<Ts...>>;
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>>;
 			};
 			template <unsigned N, typename F0, typename F1, typename F2, typename C>
 			struct dispatch<N, fork_<F0, F1, F2, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<3, C>::template f<
-				        typename dispatch<(N + (N > sizeof...(Ts))), F0>::template f<Ts...>,
-				        typename dispatch<(N + (N > sizeof...(Ts))), F1>::template f<Ts...>,
-				        typename dispatch<(N + (N > sizeof...(Ts))), F2>::template f<Ts...>>;
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F2>::template f<Ts...>>;
 			};
 			template <unsigned N, typename F0, typename F1, typename F2, typename F3, typename C>
 			struct dispatch<N, fork_<F0, F1, F2, F3, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<4, C>::template f<
-				        typename dispatch<(N + (N > sizeof...(Ts))), F0>::template f<Ts...>,
-				        typename dispatch<(N + (N > sizeof...(Ts))), F1>::template f<Ts...>,
-				        typename dispatch<(N + (N > sizeof...(Ts))), F2>::template f<Ts...>,
-				        typename dispatch<(N + (N > sizeof...(Ts))), F3>::template f<Ts...>>;
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F2>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F3>::template f<Ts...>>;
 			};
 		} // namespace detail
 	} // namespace tmp

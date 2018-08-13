@@ -24,7 +24,7 @@ namespace boost {
 			};
 
 			template <typename C>
-			struct unpack_impl<C, nothing_> {  //in case of nothing_ input give a nothing_ output
+			struct unpack_impl<C, nothing_> { // in case of nothing_ input give a nothing_ output
 				using type = nothing_;
 			};
 

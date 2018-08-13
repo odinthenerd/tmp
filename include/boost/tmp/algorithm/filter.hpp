@@ -8,8 +8,8 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
-#include "../detail/capabilities.hpp"
 #include "../call.hpp"
+#include "../detail/capabilities.hpp"
 #include "../detail/dispatch.hpp"
 #include "../detail/expression.hpp"
 #include "../is.hpp"
@@ -125,26 +125,25 @@ namespace boost {
 			template <unsigned N, template <typename...> class F, typename C>
 			struct dispatch<N, filter_<lift_<F>, C>> {
 				template <typename T, typename... Ts>
-				using f = typename filtery<(F<T>::value + 2 * (N == 1)), F,
+				using f = typename filtery<(F<T>::value + 2 * (sizeof...(Ts) == 0)), F,
 				                           C>::template f<(sizeof...(Ts)), T, Ts...>;
-			};
-
-			template <template <typename...> class F, template <typename...> class C>
-			struct dispatch<0, filter_<lift_<F>, lift_<C>>> {
-				template <typename... Ts>
-				using f = C<>;
 			};
 
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, filter_<F, C>> {
 				template <typename T, typename... Ts>
-				using f = typename filtery<(dispatch<1, F>::template f<T>::value + 2 * (N == 1)),
-				                           dispatch<1, F>::template f,
-				                           C>::template f<(sizeof...(Ts)), T, Ts...>;
+				using f = typename filtery<
+				        (dispatch<1, F>::template f<T>::value + 2 * (sizeof...(Ts) == 0)),
+				        dispatch<1, F>::template f, C>::template f<(sizeof...(Ts)), T, Ts...>;
 			};
 
 			template <typename F, typename C>
 			struct dispatch<0, filter_<F, C>> {
+				template <typename... Ts>
+				using f = typename dispatch<0, C>::template f<>;
+			};
+			template <template <typename...> class F, typename C>
+			struct dispatch<0, filter_<lift_<F>, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<0, C>::template f<>;
 			};

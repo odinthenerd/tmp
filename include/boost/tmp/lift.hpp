@@ -19,7 +19,7 @@ namespace boost {
 		struct lift_ {};
 
 		namespace detail {
-#ifdef BOOST_TMP_CLANG_ARITY_BUG
+#ifndef BOOST_TMP_CLANG_ARITY_BUGh
 			template <template <typename...> class F, typename C>
 			struct dispatch<1, lift_<F, C>> {
 				template <typename T>

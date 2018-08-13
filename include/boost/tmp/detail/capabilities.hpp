@@ -1,7 +1,7 @@
 #ifndef BOOST_TMP_CAPABILITIES_HPP_INCLUDED
 #define BOOST_TMP_CAPABILITIES_HPP_INCLUDED
 
-#if __clang_major__ != 3
+#if __clang_major__ == 3
 #define BOOST_TMP_CLANG_ARITY_BUG
 #endif
 #if __cplusplus >= 201103L

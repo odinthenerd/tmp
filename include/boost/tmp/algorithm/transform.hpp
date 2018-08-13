@@ -21,8 +21,8 @@ namespace boost {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, transform_<F, C>> {
 				template <typename... Ts>
-				using f = typename dispatch<(N + (N > sizeof...(Ts))),
-				                            C>::template f<call_<F, Ts>...>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts)), C>::template f<
+				        typename dispatch<1, F>::template f<Ts>...>;
 			};
 
 			template <unsigned N, template <typename...> class F, typename FC, typename C>

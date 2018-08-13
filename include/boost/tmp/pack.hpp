@@ -19,7 +19,7 @@ namespace boost {
 		namespace fusion {
 			template <typename... Bs>
 			struct pack : Bs... {
-				constexpr pack(Bs &&... as) : Bs{std::move(as)}... {
+				constexpr pack(Bs &&... as) : Bs(std::move(as))... {
 				}
 			};
 
@@ -87,16 +87,23 @@ namespace boost {
 		template <typename... Ts>
 		constexpr auto pack_(Ts &&... args) {
 			return fusion::detail::pack_impl(call_<zip_with_index_<lift_<fusion::detail::base>>,
-													 decltype(std::forward<Ts>(args))...>{},
-											 std::forward<Ts>(args)...);
+			                                       decltype(std::forward<Ts>(args))...>{},
+			                                 std::forward<Ts>(args)...);
 		}
 		template <typename... Ts>
 		constexpr auto val_pack_(Ts... args) {
 			return fusion::detail::pack_impl(
-					call_<zip_with_index_<lift_<fusion::detail::base>>, Ts...>{},
-					std::move(args)...);
+			        call_<zip_with_index_<lift_<fusion::detail::base>>, Ts...>{},
+			        std::move(args)...);
 		}
 
+		// older clang wordaround for empty packs
+		constexpr fusion::pack<> pack_() {
+			return fusion::pack<>{};
+		}
+		constexpr fusion::pack<> val_pack_() {
+			return fusion::pack<>{};
+		}
 #endif
 	} // namespace tmp
 } // namespace boost

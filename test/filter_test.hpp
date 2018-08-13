@@ -18,8 +18,6 @@ namespace filter_test {
                            tmp::int_<6>, tmp::int_<7>, tmp::int_<8>, tmp::int_<9>, tmp::int_<10>>;
 	using result0 = tmp::call_<tmp::unpack_<tmp::filter_<tmp::lift_<is_even>>>, xs0>;
 
-	template <typename T>
-	using is_even = bool_<(T::value % 2 == 0)>;
 	int run() {
 		using make_filtered_sequence = make_sequence_<identity_, filter_<lift_<is_even>>>;
 		using make_stride2_sequence =

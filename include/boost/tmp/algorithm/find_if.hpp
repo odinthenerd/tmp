@@ -39,7 +39,7 @@ namespace boost {
 			template <typename F>
 			struct ast<find_if_<F, identity_>, listify_> { // break recursion
 				find_if_<F, identity_> head;
-				template <typename... Bs> //not found case
+				template <typename... Bs> // not found case
 				constexpr nothing_ f(list_<nothing_>, const pack<Bs...> &p) {
 					return nothing_{};
 				};
@@ -128,19 +128,22 @@ namespace boost {
 				                    template f<T7>>::value)>::template f<F, N + 8, Ts...>;
 			};
 
+			template <>
+			struct foldey<1000000> {};
+
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, find_if_<F, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<1, C>::template f<
-				        typename foldey<(select_foldey_loop(sizeof...(Ts)))>::template f<
+				        typename foldey<select_foldey_loop(sizeof...(Ts))>::template f<
 				                county<false, -1, dispatch<1, F>::template f>, 0, Ts...>>;
 			};
 
 			template <unsigned N, template <typename...> class F, typename C>
 			struct dispatch<N, find_if_<lift_<F>, C>> {
 				template <typename... Ts>
-				using f = typename dispatch<1, C>::template f<typename foldey<(select_foldey_loop(
-				        sizeof...(Ts)))>::template f<county<false, -1, F>, 0, Ts...>>;
+				using f = typename dispatch<1, C>::template f<typename foldey<select_foldey_loop(
+				        sizeof...(Ts))>::template f<county<false, -1, F>, 0, Ts...>>;
 			};
 		} // namespace detail
 	} // namespace tmp

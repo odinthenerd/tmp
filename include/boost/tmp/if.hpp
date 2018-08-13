@@ -37,12 +37,35 @@ namespace boost {
 				using f = U;
 			};
 
+			template <typename P, typename T, typename F>
+			struct dispatch<1, if_<P, T, F>> {
+				template <typename T0>
+				using f =
+				        typename dispatch<1, typename if_impl<dispatch<1, P>::template f<
+				                                     T0>::value>::template f<T, F>>::template f<T0>;
+			};
+
+			template <template <typename...> class P, typename T, typename F>
+			struct dispatch<1, if_<lift_<P>, T, F>> {
+				template <typename T0>
+				using f = typename dispatch<
+				        1, typename if_impl<P<T0>::value>::template f<T, F>>::template f<T0>;
+			};
+
 			template <unsigned N, typename P, typename T, typename F>
 			struct dispatch<N, if_<P, T, F>> {
 				template <typename... Ts>
-				using f = typename dispatch<(N + (N > sizeof...(Ts))),
-				                            typename if_impl<call_<P, Ts...>::value>::template f<
-				                                    T, F>>::template f<Ts...>;
+				using f = typename dispatch<
+				        find_dispatch(sizeof...(Ts)),
+				        typename if_impl<dispatch<find_dispatch(sizeof...(Ts)), P>::template f<
+				                Ts...>::value>::template f<T, F>>::template f<Ts...>;
+			};
+			template <unsigned N, template <typename...> class P, typename T, typename F>
+			struct dispatch<N, if_<lift_<P>, T, F>> {
+				template <typename... Ts>
+				using f = typename dispatch<
+				        find_dispatch(sizeof...(Ts)),
+				        typename if_impl<P<Ts...>::value>::template f<T, F>>::template f<Ts...>;
 			};
 			template <template <typename...> class P>
 			struct dispatch<1, if_<lift_<P>, listify_, always_<list_<>>>> {

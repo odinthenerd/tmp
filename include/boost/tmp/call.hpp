@@ -9,6 +9,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 
 #include <type_traits>
+#include "detail/capabilities.hpp"
 #include "detail/dispatch.hpp"
 #include "vocabulary.hpp"
 
@@ -26,11 +27,21 @@ namespace boost {
 			template <typename T>
 			using maybe_impl =
 			        typename maybe_test_impl<std::is_same<T, nothing_>::value>::template f<T>;
+
+			template <typename F, typename... Ts> // workaround for old clang
+			struct call_impl {
+				using type = typename dispatch<find_dispatch(sizeof...(Ts)), F>::template f<Ts...>;
+			};
 		} // namespace detail
+
+#if defined(BOOST_TMP_CLANG_ARITY_BUG)
+		template <typename T, typename... Ts>
+		using call_ = typename detail::call_impl<T, Ts...>::type;
+#else
 		template <typename T, typename... Ts>
 		using call_ = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                        T>::template f<Ts...>;
-
+#endif
 		template <typename T, typename... Ts>
 		using call_t = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                         T>::template f<Ts...>::type;

@@ -8,9 +8,9 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "drop.hpp"
 #include "../identity.hpp"
 #include "../vocabulary.hpp"
-#include "drop.hpp"
 namespace boost {
 	namespace tmp {
 		template <typename I, typename C = identity_>
@@ -83,7 +83,7 @@ namespace boost {
 			template <unsigned N, typename C>
 			struct dispatch<N, index_<uint_<7>, C>> {
 				template <typename T0, typename T1, typename T2, typename T3, typename T4,
-						typename T5, typename T6, typename T7, typename... Ts>
+				          typename T5, typename T6, typename T7, typename... Ts>
 				using f = typename dispatch<1, C>::template f<T7>;
 			};
 		} // namespace detail
