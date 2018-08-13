@@ -8,6 +8,7 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "../detail/capabilities.hpp"
 #include "../fusion.hpp"
 #include "../sequence/index.hpp"
 #include "../sequence/size.hpp"
@@ -38,8 +39,16 @@ namespace boost {
 			template <typename F>
 			struct ast<find_if_<F, identity_>, listify_> { // break recursion
 				find_if_<F, identity_> head;
+				template <typename... Bs> //not found case
+				constexpr nothing_ f(list_<nothing_>, const pack<Bs...> &p) {
+					return nothing_{};
+				};
 				template <typename T, typename... Bs>
 				constexpr auto f(list_<T>, pack<Bs...> &p) -> typename T::type {
+					return static_cast<T &>(p).get();
+				};
+				template <typename T, typename... Bs>
+				constexpr auto f(list_<T>, const pack<Bs...> &p) -> typename T::type {
 					return static_cast<const T &>(p).get();
 				};
 				template <typename T, typename... Bs>

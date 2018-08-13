@@ -8,6 +8,7 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "detail/capabilities.hpp"
 #include "detail/dispatch.hpp"
 #include "detail/fusion_rebind.hpp"
 namespace boost {

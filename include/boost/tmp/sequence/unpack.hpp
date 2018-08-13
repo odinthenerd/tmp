@@ -24,6 +24,11 @@ namespace boost {
 			};
 
 			template <typename C>
+			struct unpack_impl<C, nothing_> {  //in case of nothing_ input give a nothing_ output
+				using type = nothing_;
+			};
+
+			template <typename C>
 			struct dispatch<1, unpack_<C>> {
 				template <typename L>
 				using f = typename detail::unpack_impl<C, L>::type;

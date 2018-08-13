@@ -8,6 +8,7 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "detail/capabilities.hpp"
 #include "detail/dispatch.hpp"
 #include "lift.hpp"
 #include "sequence/zip_with_index.hpp"
@@ -32,7 +33,7 @@ namespace boost {
 				struct base {
 					T data;
 					using type = T;
-					constexpr T &get() const & {
+					constexpr const T &get() const & {
 						return data;
 					}
 					constexpr const T &&get() const && {
