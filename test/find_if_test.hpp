@@ -2,6 +2,7 @@
 #include "test_util.hpp"
 #include "../include/boost/tmp/algorithm/find_if.hpp"
 #include "../include/boost/tmp/is.hpp"
+#include "../include/boost/tmp/pack.hpp"
 #include "../include/boost/tmp/sequence/unpack.hpp"
 
 namespace find_if_test {

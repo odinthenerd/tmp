@@ -15,17 +15,17 @@
 
 namespace boost {
 	namespace tmp {
-#ifdef BOOST_TMP_CPP14
 		namespace fusion {
+#ifdef BOOST_TMP_CPP14
+			template <>
+			struct rebind<listify_> {
+				using type = listify_;
+			};
+#endif
 			template <typename... Bs>
 			struct pack : Bs... {
 				constexpr pack(Bs &&... as) : Bs(std::move(as))... {
 				}
-			};
-
-			template <>
-			struct rebind<listify_> {
-				using type = listify_;
 			};
 
 			namespace detail {
@@ -39,9 +39,11 @@ namespace boost {
 					constexpr const T &&get() const && {
 						return std::move(data);
 					}
+#ifdef BOOST_TMP_CPP14
 					constexpr T &&get() && {
 						return std::move(data);
 					}
+#endif
 				};
 
 				template <typename I, typename T>
@@ -54,9 +56,11 @@ namespace boost {
 					constexpr const T &&get() const && {
 						return std::move(data);
 					}
+#ifdef BOOST_TMP_CPP14
 					constexpr T &&get() && {
 						return std::move(data);
 					}
+#endif
 				};
 
 				template <typename I, typename T>
@@ -85,13 +89,26 @@ namespace boost {
 		} // namespace fusion
 
 		template <typename... Ts>
-		constexpr auto pack_(Ts &&... args) {
+		constexpr auto pack_(Ts &&... args)
+#ifndef BOOST_TMP_CPP14
+		        -> decltype(fusion::detail::pack_impl(
+		                call_<zip_with_index_<lift_<fusion::detail::base>>,
+		                      decltype(std::forward<Ts>(args))...>{},
+		                std::forward<Ts>(args)...))
+#endif
+		{
 			return fusion::detail::pack_impl(call_<zip_with_index_<lift_<fusion::detail::base>>,
 			                                       decltype(std::forward<Ts>(args))...>{},
 			                                 std::forward<Ts>(args)...);
 		}
 		template <typename... Ts>
-		constexpr auto val_pack_(Ts... args) {
+		constexpr auto val_pack_(Ts... args)
+#ifndef BOOST_TMP_CPP14
+		        -> decltype(fusion::detail::pack_impl(
+		                call_<zip_with_index_<lift_<fusion::detail::base>>, Ts...>{},
+		                std::move(args)...))
+#endif
+		{
 			return fusion::detail::pack_impl(
 			        call_<zip_with_index_<lift_<fusion::detail::base>>, Ts...>{},
 			        std::move(args)...);
@@ -104,7 +121,7 @@ namespace boost {
 		constexpr fusion::pack<> val_pack_() {
 			return fusion::pack<>{};
 		}
-#endif
+		//#endif
 	} // namespace tmp
 } // namespace boost
 #endif

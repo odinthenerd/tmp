@@ -17,63 +17,66 @@ namespace boost {
 
 		namespace detail {
 			constexpr unsigned rotate_select(unsigned N) {
-				return N <= 8 ? N : N <= 16 ? 16 : N <= 32 ? 32 : 64;
+				return N <= 8 ? N : N < 16 ? 8 : N < 32 ? 16 : N < 64 ? 32 : 64;
 			}
 			template <unsigned, typename C>
 			struct rotate_impl;
 			template <typename C>
 			struct rotate_impl<0, C> {
 				template <typename... Ts>
-				using f = call_<C, Ts...>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts)), C>::template f<Ts...>;
 			};
 			template <typename C>
 			struct rotate_impl<1, C> {
 				template <typename T, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 1), C>::template f<Ts..., T>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 1), C>::template f<Ts...,
+				                                                                             T>;
 			};
 			template <typename C>
 			struct rotate_impl<2, C> {
 				template <typename T0, typename T1, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 2), C>::template f<Ts..., T0, T1>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 2),
+				                            C>::template f<Ts..., T0, T1>;
 			};
 			template <typename C>
 			struct rotate_impl<3, C> {
 				template <typename T0, typename T1, typename T2, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 3), C>::template f<Ts..., T0, T1, T2>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 3),
+				                            C>::template f<Ts..., T0, T1, T2>;
 			};
 			template <typename C>
 			struct rotate_impl<4, C> {
 				template <typename T0, typename T1, typename T2, typename T3, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 4), C>::template f<Ts..., T0, T1, T2,
-				                                                                T3>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 4),
+				                            C>::template f<Ts..., T0, T1, T2, T3>;
 			};
 			template <typename C>
 			struct rotate_impl<5, C> {
 				template <typename T0, typename T1, typename T2, typename T3, typename T4,
 				          typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 5), C>::template f<Ts..., T0, T1, T2,
-				                                                                T3, T4>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 5),
+				                            C>::template f<Ts..., T0, T1, T2, T3, T4>;
 			};
 			template <typename C>
 			struct rotate_impl<6, C> {
 				template <typename T0, typename T1, typename T2, typename T3, typename T4,
 				          typename T5, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 6), C>::template f<Ts..., T0, T1, T2,
-				                                                                T3, T4, T5>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 6),
+				                            C>::template f<Ts..., T0, T1, T2, T3, T4, T5>;
 			};
 			template <typename C>
 			struct rotate_impl<7, C> {
 				template <typename T0, typename T1, typename T2, typename T3, typename T4,
 				          typename T5, typename T6, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 7), C>::template f<Ts..., T0, T1, T2,
-				                                                                T3, T4, T5, T6>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 7),
+				                            C>::template f<Ts..., T0, T1, T2, T3, T4, T5, T6>;
 			};
 			template <typename C>
 			struct rotate_impl<8, C> {
 				template <typename T0, typename T1, typename T2, typename T3, typename T4,
 				          typename T5, typename T6, typename T7, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 8), C>::template f<Ts..., T0, T1, T2,
-				                                                                T3, T4, T5, T6, T7>;
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 8),
+				                            C>::template f<Ts..., T0, T1, T2, T3, T4, T5, T6, T7>;
 			};
 			template <typename C>
 			struct rotate_impl<16, C> {
@@ -81,7 +84,7 @@ namespace boost {
 				          typename T5, typename T6, typename T7, typename T8, typename T9,
 				          typename T10, typename T11, typename T12, typename T13, typename T14,
 				          typename T15, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 16),
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 16),
 				                            C>::template f<Ts..., T0, T1, T2, T3, T4, T5, T6, T7,
 				                                           T8, T9, T10, T11, T12, T13, T14, T15>;
 			};
@@ -94,7 +97,7 @@ namespace boost {
 				          typename T20, typename T21, typename T22, typename T23, typename T24,
 				          typename T25, typename T26, typename T27, typename T28, typename T29,
 				          typename T30, typename T31, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 16), C>::template f<
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 32), C>::template f<
 				        Ts..., T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				        T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 				        T31>;
@@ -114,7 +117,7 @@ namespace boost {
 				          typename T50, typename T51, typename T52, typename T53, typename T54,
 				          typename T55, typename T56, typename T57, typename T58, typename T59,
 				          typename T60, typename T61, typename T62, typename T63, typename... Ts>
-				using f = typename dispatch<(sizeof...(Ts) + 16), C>::template f<
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 64), C>::template f<
 				        Ts..., T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15,
 				        T16, T17, T18, T19, T20, T21, T22, T23, T24, T25, T26, T27, T28, T29, T30,
 				        T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43, T44, T45,

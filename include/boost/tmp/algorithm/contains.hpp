@@ -8,13 +8,18 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
-#include "find_if.hpp"
 #include "../identity.hpp"
+#include "../logic.hpp"
 
 namespace boost {
 	namespace tmp {
-		template <typename F, typename C = identity_>
+		template <typename V, typename C = identity_>
 		struct contains_ {};
+
+		namespace detail {
+			template <unsigned N, typename V, typename C>
+			struct dispatch<N, contains_<V, C>> : dispatch<N, or_<is_<V>, C>> {};
+		} // namespace detail
 	} // namespace tmp
 } // namespace boost
 

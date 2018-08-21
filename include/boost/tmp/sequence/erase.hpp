@@ -1,5 +1,5 @@
-#ifndef BOOST_TMP_TAKE_HPP_INCLUDED
-#define BOOST_TMP_TAKE_HPP_INCLUDED
+#ifndef BOOST_TMP_ERASE_HPP_INCLUDED
+#define BOOST_TMP_ERASE_HPP_INCLUDED
 
 //  Copyright 2018 Odin Holmes.
 //
@@ -9,21 +9,28 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 
 #include "drop.hpp"
+#include "pop_front.hpp"
 #include "rotate.hpp"
 #include "../vocabulary.hpp"
 
 namespace boost {
 	namespace tmp {
 		template <typename N = uint_<0>, typename C = listify_>
-		struct take_ {};
+		struct erase_ {};
 
 		namespace detail {
-			template <unsigned N, typename P, typename C>
-			struct dispatch<N, take_<P, C>> {
+			template <unsigned N, typename I, typename C>
+			struct dispatch<N, erase_<I, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<
-				        find_dispatch(sizeof...(Ts)),
-				        rotate_<P, drop_<uint_<(sizeof...(Ts) - P::value)>, C>>>::template f<Ts...>;
+				        N,
+				        rotate_<I, pop_front_<rotate_<uint_<(sizeof...(Ts) - I::value - 1)>, C>>>>::
+				        template f<Ts...>;
+			};
+			template <typename I, typename C>
+			struct dispatch<0, erase_<I, C>> {
+				template <typename... Ts>
+				using f = typename dispatch<1, C>::template f<nothing_>;
 			};
 		} // namespace detail
 	} // namespace tmp
