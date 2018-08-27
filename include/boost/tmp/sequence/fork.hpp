@@ -13,6 +13,7 @@ namespace boost {
 	namespace tmp {
 		template <typename... Fs>
 		struct fork_ {};
+		struct forward_as_pack_ {}; // only allowed as last closure before the continuation
 		namespace detail {
 			template <unsigned N, typename F, typename C>
 			struct dispatch<N, fork_<F, C>> {
@@ -27,6 +28,13 @@ namespace boost {
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>>;
 			};
+			template <unsigned N, typename F0, typename C>
+			struct dispatch<N, fork_<F0, forward_as_pack_, C>> {
+				template <typename... Ts>
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 1), C>::template f<
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
+				        Ts...>;
+			};
 			template <unsigned N, typename F0, typename F1, typename F2, typename C>
 			struct dispatch<N, fork_<F0, F1, F2, C>> {
 				template <typename... Ts>
@@ -34,6 +42,14 @@ namespace boost {
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>,
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F2>::template f<Ts...>>;
+			};
+			template <unsigned N, typename F0, typename F1, typename C>
+			struct dispatch<N, fork_<F0, F1, forward_as_pack_, C>> {
+				template <typename... Ts>
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 2), C>::template f<
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>,
+				        Ts...>;
 			};
 			template <unsigned N, typename F0, typename F1, typename F2, typename F3, typename C>
 			struct dispatch<N, fork_<F0, F1, F2, F3, C>> {
@@ -43,6 +59,15 @@ namespace boost {
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>,
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F2>::template f<Ts...>,
 				        typename dispatch<find_dispatch(sizeof...(Ts)), F3>::template f<Ts...>>;
+			};
+			template <unsigned N, typename F0, typename F1, typename F2, typename C>
+			struct dispatch<N, fork_<F0, F1, F2, forward_as_pack_, C>> {
+				template <typename... Ts>
+				using f = typename dispatch<find_dispatch(sizeof...(Ts) + 3), C>::template f<
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F0>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F1>::template f<Ts...>,
+				        typename dispatch<find_dispatch(sizeof...(Ts)), F2>::template f<Ts...>,
+				        Ts...>;
 			};
 		} // namespace detail
 	} // namespace tmp

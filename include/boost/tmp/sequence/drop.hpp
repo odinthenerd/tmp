@@ -19,7 +19,7 @@ namespace boost {
 
 		namespace detail {
 			constexpr unsigned drop_select(unsigned N) {
-				return N <= 8 ? N : N <= 16 ? 8 : N <= 32 ? 16 : N <= 64 ? 32 : 64;
+				return N <= 8 ? N : N < 16 ? 8 : N < 32 ? 16 : N < 64 ? 32 : 64;
 			}
 			template <unsigned, typename C>
 			struct drop_impl;
@@ -110,8 +110,7 @@ namespace boost {
 			};
 
 			template <unsigned P, typename C, unsigned Step = drop_select(P)>
-			struct make_drop
-			    : drop_impl<drop_select(Step), drop_<uint_<(P - Step)>, C>> { /* not done */
+			struct make_drop : drop_impl<Step, drop_<uint_<(P - Step)>, C>> { /* not done */
 			};
 			template <unsigned P, typename C>
 			struct make_drop<P, C, P> : drop_impl<P, C> {};

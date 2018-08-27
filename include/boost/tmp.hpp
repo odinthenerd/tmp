@@ -16,6 +16,7 @@
 #include "tmp/algorithm/product.hpp"
 #include "tmp/algorithm/remove_if.hpp"
 #include "tmp/algorithm/replace_if.hpp"
+#include "tmp/algorithm/sort.hpp"
 #include "tmp/algorithm/transform.hpp"
 #include "tmp/always.hpp"
 #include "tmp/call.hpp"

@@ -10,6 +10,7 @@
 #include "partition_test.hpp"
 #include "product_test.hpp"
 #include "reverse_test.hpp"
+#include "sort_test.hpp"
 #include "take_test.hpp"
 #include "transform_test.hpp"
 #include "try_test.hpp"
