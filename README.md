@@ -1,13 +1,14 @@
  # boost.tmp (Tacit Meta Programming) 
  ## Warning! still work in progress
 I decided to rewrite all of kvasir::mpl on a slightly different paradigm to extend compiler support further back and get some more speed out of low arity calls. Therefore most of this code has seen little or no testing beyond the skimpy unit test coverage so far. Bug reports welcome, do not use this in anything you don't want to see blow up spectacularly... yet. 
+
  ### What is boost.tmp?
-It is my (not yet submitted to) boost general purpose metaprogramming library which covers the domains of boost.MPL, boost.Fusion, boost.mp11 and boost.hana. 
+A (not yet submitted to) boost general purpose Template Meta Programming (TMP) library which covers the domains of boost.MPL, boost.Fusion, boost.mp11 and boost.hana. 
  ### Why do we need another metaprogramming library in boost?
 There are a few reasons:
- - the public interface is a tacit DSL which allows for arbitrarily complex compositions of higher-order functions unlike hana and mp11
- - (often) faster compile times than code handwritten by experts due to encapsulation/leverage of intrinsics and knowledge of the users composition
- - the interface is lazy/short-circuiting by default which removes the need for things like std::conjunction, std::disjunction etc. and makes dealing with SFINAE much easier
+ - a tacit DSL as the public interface allows for arbitrarily complex (almost) zero cost compositions of higher-order functions unlike current solutions
+ - pattern matching, encapsulation of expertise and leverage of intrinsics often can yield even faster compile times than code handwritten by experts 
+ - the interface is lazy/short-circuiting by default which removes the need for things like std::conjunction, std::disjunction etc. and makes SFINAE friendly code much easier to write, understand and teach
  - (still experimental) capture and monadic propagation of SFINAE failure allows for potentially more expressive, more intuitive and sometimes faster code in SFINAE contexts
  - (still experimental) heterogeneous l-, r-value reference support (as opposed to just values in hana)
  - (still experimental) heterogeneous (fusion) support in c++11
@@ -16,20 +17,67 @@ There are a few reasons:
  ## core concepts
  ### existing concepts
 Allow me to do a short review of existing metaprogramming concepts. If you are familiar with these feel free to skip ahead to new concepts.
- #### lazy metafunctions
-Lazy metafunctions are implemented using class templates. 
+
+ #### template specialization
+*This is starting at the very beginning, skip ahead to **lazy metafunctions** if you know what class templates are.* 
+
+
+The workhorse of C++ metaprogramming is a language feature called class templates and template specialization. 
 ```C++
 template<typename T>
-struct remove_const{  			//generic template
+struct remove_const{              //generic template
+
+};
+```
+Above we have **defined** a class template named `remove_const` which takes one **type parameter** named `T`. This `T` parameter can be thought of a wildcard which can represent any type which the user *passed in*. We can *pass in* a parameter by naming it in a pair of trailing angle brackets:
+```C++
+remove_const<int> a{};    //note that this does not actually remove const (yet)
+```
+The above code defines a variable named `a` of type `remove_const<int>`. It should be noted that the type of a template instance consists of not only the template but all of its parameters. Therefore `remove_const<int>` and `remove_const<bool>` are two distinct types (or even `remove_const<const int>` for that matter). 
+In order to make our `remove_const<T>` actually do what we intend we need to be able to do different things depending on whether the input is const or not. The right tool for the job, or the tool of choice for almost any kind of decision making or introspection in TMP for that matter, is called **partial specialization**.
+```C++
+template<typename T>
+struct remove_const{              	//definition
+
+};
+template<typename T>
+struct remove_const<const T>{     //partial specialization
+
+};
+```
+```C++
+template<typename T>
+struct remove_const{                  //definition
+
+};
+template<typename T>
+struct remove_const<const T>{     //partial specialization 1
+
+};
+template<typename T>
+struct remove_const<const volatile T>{     //partial specialization 2
+
+};
+remove_const<int> a; //does not match 1 or 2
+remove_const<const int> b; //matches 1 and not 2
+remove_const<volatile const int> c; //matches 1 and 2
+```
+Above we can see that `a` only matches the generic definition, `b` matches specialization 1 and `c` matches both specializations. In the case of `c` specialization resolution is however not ambiguous because the pattern `const volatile T` can only match a smaller subset of all types compared to `const T` and is therefore considered **more specialized**. More specialized templates are considered a better match than less specialized templates. 
+ 
+ #### lazy metafunctions
+Lazy metafunctions are implemented using **class templates**. 
+```C++
+template<typename T>
+struct remove_const{              //generic template
     using type = T;
 };
 template<typename T>
-struct remove_const<const T>{ 	//specialization
+struct remove_const<const T>{     //specialization
     using type = T;
 };
 ```
-Above we are using class template specialization in order to implement a metafunction which removes const from its input parameter type. Because the pattern const T matches a smaller category of input types than the generic case it is considered more specialized and is instantiated whenever the input matches that pattern. 
-This metafunction is 'lazy' in that the 'instantiation' (think 'evaluation' or 'making the damn thing') only happens when we actually 'call' the metafunction. We can 'call' this metafunction by referring to its nested type alias called type. 
+Above we are using class template specialization in order to implement a metafunction which removes const from its input parameter type. By adding a member alias named "type" (the name type is a convention, we could have named it anything) we can *return* a type from this **metafunction**. In this case, the "type" is an alias to the input type which, in the specialization case, has its const qualifier stripped. 
+This metafunction is **lazy** in that the **instantiation** (think 'evaluation' or 'making the damn thing') only happens when we actually **call** the **metafunction**. We can **call** a **lazy** **metafunction** by referring to its nested "type" alias. 
 ```C++
 template<typename T>
 typename remove_const<T>::type foo(T& a);  
@@ -37,9 +85,39 @@ typename remove_const<T>::type foo(T& a);
 or more to the point
 ```C++
 typedef remove_const<T> thing;    //not instantiated yet
-typename thing::type i;                      //instantiated here
+typename thing<int>::type i;                      //instantiated here
 ```
-Sadly above we must use the typename disambiguator in order to tell the compiler that the name 'type' on the right-hand side of the :: is, in fact, a type and not a value, member function, template etc. This is one of the drawbacks of lazy metafunctions.
+Sadly above we must use the `typename` disambiguator in order to tell the compiler that the name "type" on the right-hand side of the :: is, in fact, a type and not a value, member function, template etc. This is one of the drawbacks of lazy metafunctions.
+```C++
+template<typename T>
+struct remove_const<int>{     //crazy specialization for int
+    void type();  //now "type" is a function
+};
+template<typename T>
+struct remove_const<bool>{     //crazy specialization for bool
+    int type;  //now "type" is a value
+};
+template<typename T>
+struct remove_const<bool>{     //crazy specialization for char
+    template<int I>  //yes template parameters can also be values
+    struct type{
+        static int value = 1;
+    };  //now "type" is a class template
+};
+template<typename T>
+struct remove_const<long>{     //crazy specialization for long
+    template<int I>  //yes template parameters can also be values
+    int type();  //now "type" is a function template
+};
+```
+As we can see above the name "type" could be any number of things and its not always clear which one the user is expecting. The default assumes that the user is expecting a nested name (think the thing on the right-hand side of a :: operator) of a **class template** to be a value. If we are expecting a function the compiler is also able to figure it out. If we are expecting a type rather than a value or function we need to prefix the expression with the `typename` **disambiguator**. If we are expecting a template for that matter we need to use the `template` **disambiguator**. 
+```C++
+int a = add_const<bool>::template type<1>::value; //template disambiguator tells the
+                                                  //compoler that "type" is expected to be a template 
+
+add_const<long> b{};                              //create instance of add_const<long>
+int c = b.template type<2>();                     //call member function template "type"
+```
 
  #### eager metafunctions
 C++11 gave us a few new tools, not only variadic templates but also alias templates. 
