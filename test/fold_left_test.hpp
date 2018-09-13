@@ -1,5 +1,6 @@
 #include "test_util.hpp"
 #include "../include/boost/tmp/algorithm/fold_left.hpp"
+#include "../include/boost/tmp/sequence/join.hpp"
 
 namespace fold_left_test {
 	template <typename T, typename U>

@@ -8,7 +8,7 @@ add_library(boost_tmp INTERFACE)
 # things out by itself
 target_compile_features(boost_tmp INTERFACE
 		#cxx_generic_lambdas
-		#cxx_variable_templates
+		cxx_variable_templates
 		cxx_variadic_templates
 		cxx_constexpr
 		cxx_alias_templates

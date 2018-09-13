@@ -34,6 +34,22 @@ namespace boost {
 		using i6_ = index_<uint_<6>, C>;
 		template <typename C = identity_>
 		using i7_ = index_<uint_<7>, C>;
+		template <typename C = identity_>
+		using ui0_ = unpack_<index_<uint_<0>, C>>;
+		template <typename C = identity_>
+		using ui1_ = unpack_<index_<uint_<1>, C>>;
+		template <typename C = identity_>
+		using ui2_ = unpack_<index_<uint_<2>, C>>;
+		template <typename C = identity_>
+		using ui3_ = unpack_<index_<uint_<3>, C>>;
+		template <typename C = identity_>
+		using ui4_ = unpack_<index_<uint_<4>, C>>;
+		template <typename C = identity_>
+		using ui5_ = unpack_<index_<uint_<5>, C>>;
+		template <typename C = identity_>
+		using ui6_ = unpack_<index_<uint_<6>, C>>;
+		template <typename C = identity_>
+		using ui7_ = unpack_<index_<uint_<7>, C>>;
 		namespace detail {
 			template <unsigned N, typename I, typename C>
 			struct dispatch<N, index_<I, C>> : dispatch<N, drop_<I, front_<C>>> {};

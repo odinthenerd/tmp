@@ -1,7 +1,7 @@
 #include <memory>
 #include "test_util.hpp"
-#include "../include/boost/tmp/algorithm/find_if.hpp"
-#include "../include/boost/tmp/is.hpp"
+#include "../include/boost/tmp/comparison.hpp"
+#include "../include/boost/tmp/fusion/find_if.hpp"
 #include "../include/boost/tmp/pack.hpp"
 #include "../include/boost/tmp/sequence/unpack.hpp"
 

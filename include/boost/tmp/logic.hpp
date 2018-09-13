@@ -10,7 +10,8 @@
 
 #include <type_traits>
 #include "algorithm/find_if.hpp"
-#include "is.hpp"
+#include "call.hpp"
+#include "comparison.hpp"
 #include "vocabulary.hpp"
 
 namespace boost {

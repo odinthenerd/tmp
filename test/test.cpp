@@ -2,6 +2,7 @@
 #include "count_if_test.hpp"
 #include "erase_test.hpp"
 #include "filter_test.hpp"
+#include "tee_test.hpp"
 #include "find_if_test.hpp"
 #include "fold_left_test.hpp"
 #include "fold_right_test.hpp"

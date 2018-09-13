@@ -1,7 +1,7 @@
 #include "test_util.hpp"
-#include "../include/boost/tmp/algorithm/filter.hpp"
+#include "../include/boost/tmp/comparison.hpp"
 #include "../include/boost/tmp/fusion.hpp"
-#include "../include/boost/tmp/is.hpp"
+#include "../include/boost/tmp/fusion/filter.hpp"
 #include "../include/boost/tmp/pack.hpp"
 #include "../include/boost/tmp/sequence/zip.hpp"
 
