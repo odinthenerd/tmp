@@ -11,6 +11,7 @@
 #include "../algorithm/contains.hpp"
 #include "../identity.hpp"
 #include "../logic.hpp"
+#include "../sequence/index.hpp"
 
 namespace boost {
 	namespace tmp {
