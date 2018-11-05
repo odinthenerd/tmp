@@ -18,6 +18,9 @@ namespace boost {
 		template <template <typename...> class F, typename C = identity_>
 		struct lift_ {};
 
+		template <typename C = identity_>
+		struct result_ {};
+
 		namespace detail {
 #ifndef BOOST_TMP_CLANG_ARITY_BUGh
 			template <template <typename...> class F, typename C>
@@ -45,6 +48,11 @@ namespace boost {
 			struct dispatch<N, lift_<F, C>> {
 				template <typename... Ts>
 				using f = typename dispatch<1, C>::template f<F<Ts...>>;
+			};
+			template <typename C>
+			struct dispatch<1, result_<C>> {
+				template <typename T>
+				using f = typename dispatch<1, C>::template f<typename T::type>;
 			};
 		} // namespace detail
 	} // namespace tmp

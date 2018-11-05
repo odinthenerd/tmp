@@ -1,5 +1,5 @@
-#ifndef BOOST_TMP_IS_HPP_INCLUDED
-#define BOOST_TMP_IS_HPP_INCLUDED
+#ifndef BOOST_TMP_COMPARISON_HPP_INCLUDED
+#define BOOST_TMP_COMPARISON_HPP_INCLUDED
 
 //  Copyright 2018 Odin Holmes.
 //
@@ -16,11 +16,20 @@ namespace boost {
 		template <typename P, typename C = identity_>
 		struct is_ {};
 
+		template <typename C = identity_>
+		struct less_ {};
+
 		namespace detail {
 			template <typename P, typename C>
 			struct dispatch<1, is_<P, C>> {
 				template <typename T>
 				using f = typename dispatch<1, C>::template f<bool_<std::is_same<P, T>::value>>;
+			};
+
+			template <typename C>
+			struct dispatch<2, less_<C>> {
+				template <typename T, typename U>
+				using f = typename dispatch<1, C>::template f < bool_<T::value<U::value>>;
 			};
 		} // namespace detail
 	} // namespace tmp

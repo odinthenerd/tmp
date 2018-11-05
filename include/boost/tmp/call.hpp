@@ -58,8 +58,8 @@ namespace boost {
 			template <unsigned N, typename C>
 			struct dispatch<N, call_f_<C>> {
 				template <typename F, typename... Ts>
-				using f = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
-				                                    F>::template f<Ts...>;
+				using f = typename dispatch<1, C>::template f<typename dispatch<
+				        detail::find_dispatch(sizeof...(Ts)), F>::template f<Ts...>>;
 			};
 		} // namespace detail
 
@@ -73,10 +73,12 @@ namespace boost {
 		        detail::maybe_impl<typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                                     T>::template f<Ts...>::type>;
 
+#if defined(__cpp_variable_templates)
 		template <typename T, typename... Ts>
 		constexpr auto maybe_v =
 		        detail::maybe_impl<typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
 		                                                     T>::template f<Ts...>>::value;
+#endif
 	} // namespace tmp
 } // namespace boost
 #endif

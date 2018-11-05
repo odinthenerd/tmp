@@ -12,7 +12,6 @@
 #include "detail/fusion_execute.hpp"
 #include "detail/fusion_rebind.hpp"
 #include "pack.hpp"
-#include "sequence/fork.hpp"
 namespace boost {
 	namespace tmp {
 #ifdef BOOST_TMP_CPP14

@@ -8,13 +8,14 @@
 //  See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt
 
+#include "../comparison.hpp"
 #include "../detail/capabilities.hpp"
 #include "../sequence/push_front.hpp"
 #include "../sequence/take.hpp"
 #include "../vocabulary.hpp"
 namespace boost {
 	namespace tmp {
-		template <typename F, typename C = listify_>
+		template <typename F = less_<>, typename C = listify_>
 		struct sort_ {};
 
 		namespace detail {
@@ -188,6 +189,11 @@ namespace boost {
 			template <unsigned N, template <typename...> class F, typename C>
 			struct dispatch<N, sort_<lift_<F>, C>>
 			    : dispatch<N, make_binary_tree<F, collapse_unpack<C>, btree::blist<>>> {};
+
+			template <unsigned N, typename F, typename C>
+			struct dispatch<N, sort_<F, C>>
+			    : dispatch<N, make_binary_tree<dispatch<2, F>::template f, collapse_unpack<C>,
+			                                   btree::blist<>>> {};
 
 		} // namespace detail
 	} // namespace tmp

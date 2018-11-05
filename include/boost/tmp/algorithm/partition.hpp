@@ -11,7 +11,7 @@
 #include "filter.hpp"
 #include "remove_if.hpp"
 #include "../call.hpp"
-#include "../sequence/fork.hpp"
+#include "../sequence/tee.hpp"
 #include "../vocabulary.hpp"
 
 namespace boost {
@@ -21,8 +21,8 @@ namespace boost {
 
 		namespace detail {
 			template <unsigned N, typename F, typename C>
-			struct dispatch<N, partition_<F, C>>
-			    : dispatch<N, fork_<filter_<F>, remove_if_<F>, C>> {};
+			struct dispatch<N, partition_<F, C>> : dispatch<N, tee_<filter_<F>, remove_if_<F>, C>> {
+			};
 		} // namespace detail
 	} // namespace tmp
 } // namespace boost

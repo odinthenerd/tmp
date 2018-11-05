@@ -14,7 +14,7 @@
 namespace boost {
 	namespace tmp {
 		template <typename V, typename C = identity_>
-		struct contains_ {};
+		struct contains_;
 
 		namespace detail {
 			template <unsigned N, typename V, typename C>
