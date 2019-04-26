@@ -98,7 +98,7 @@ struct remove_const<bool>{     //crazy specialization for bool
     int type;  //now "type" is a value
 };
 template<typename T>
-struct remove_const<bool>{     //crazy specialization for char
+struct remove_const<char>{     //crazy specialization for char
     template<int I>  //yes template parameters can also be values
     struct type{
         static int value = 1;
