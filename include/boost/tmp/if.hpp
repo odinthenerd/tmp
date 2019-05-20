@@ -64,8 +64,15 @@ namespace boost {
 			struct dispatch<N, if_<lift_<P>, T, F>> {
 				template <typename... Ts>
 				using f = typename dispatch<
-				        find_dispatch(sizeof...(Ts)),
-				        typename if_impl<P<Ts...>::value>::template f<T, F>>::template f<Ts...>;
+						find_dispatch(sizeof...(Ts)),
+						typename if_impl<P<Ts...>::value>::template f<T, F>>::template f<Ts...>;
+			};
+			template <template <typename...> class P, typename T, typename F>
+			struct dispatch<2, if_<lift_<P>, T, F>> {
+				template <typename T0, typename T1>
+				using f = typename dispatch<
+						2,
+						typename if_impl<P<T0,T1>::value>::template f<T, F>>::template f<T0,T1>;
 			};
 			template <template <typename...> class P>
 			struct dispatch<1, if_<lift_<P>, listify_, always_<list_<>>>> {

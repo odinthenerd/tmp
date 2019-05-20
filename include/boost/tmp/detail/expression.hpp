@@ -20,8 +20,8 @@ namespace boost {
 
 			template <typename H, typename T>
 			struct ast;
-			// an expression and an ast are both linked lists of expressions however, the AST hast
-			// been reversed (and can be executed)
+			// an expression and an ast are both linked lists of expressions however, the AST has
+			// been reordered (and can be executed)
 			template <typename H, typename T>
 			struct expr {
 				H head;

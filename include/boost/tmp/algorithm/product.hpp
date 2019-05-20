@@ -38,7 +38,7 @@ namespace boost {
 
 			template <typename F, typename C>
 			struct dispatch<2, product_<F, C>>
-			    : dispatch<2, product_<lift_<dispatch<2, F>::template f>, C>> {};
+					: dispatch<2, product_<lift_<dispatch<2, F>::template f>, C>> {};
 		} // namespace detail
 	} // namespace tmp
 } // namespace boost

@@ -34,12 +34,14 @@ namespace find_if_test {
 
 		);
 		constexpr auto result0 = xs0 >>= tmp::find_if_<tmp::lift_<equals_to<0>::template f>>{};
+		(void) result0;
 
 		constexpr auto xs1 = tmp::val_pack_(
 		        tmp::int_<1>{}, tmp::int_<2>{}, tmp::int_<3>{}, tmp::int_<4>{}, tmp::int_<5>{},
 		        tmp::int_<6>{}, tmp::int_<7>{}, tmp::int_<8>{}, tmp::int_<9>{}, tmp::int_<10>{});
 
 		constexpr auto result1 = xs1 >>= tmp::find_if_<tmp::lift_<equals_to<10>::template f>>{};
+		(void) result1;
 
 		(void)(1 == (val_pack_(false, 'a', 1, true) >>= find_if_<is_<int>>{}));
 
