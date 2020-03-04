@@ -38,9 +38,9 @@ namespace boost {
 		template <typename T, typename... Ts>
 		using call_ = typename detail::call_impl<T, Ts...>::type;
 #else
-		template <typename T, typename... Ts>
+		template <typename F, typename... Ts>
 		using call_ = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
-		                                        T>::template f<Ts...>;
+		                                        F>::template f<Ts...>;
 #endif
 		template <typename T, typename... Ts>
 		using call_t = typename detail::dispatch<detail::find_dispatch(sizeof...(Ts)),
